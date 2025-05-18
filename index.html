@@ -25,6 +25,46 @@
             background-color: #f6f6f6;
             padding: 16px 12px;
             flex-shrink: 0;
+            transition: width 0.3s ease;
+            position: relative;
+        }
+
+        .sidebar.collapsed {
+            width: 56px;
+        }
+
+        .sidebar.collapsed .logo img {
+            width: 32px;
+        }
+
+        .sidebar.collapsed .nav-menu span {
+            display: none;
+        }
+
+        .collapse-btn {
+            position: absolute;
+            right: -12px;
+            top: 24px;
+            width: 24px;
+            height: 24px;
+            background: #FFFFFF;
+            border: 1px solid #E5E6EB;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .collapse-btn svg {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar.collapsed .collapse-btn svg {
+            transform: rotate(180deg);
         }
 
         .logo {
@@ -46,6 +86,9 @@
         .nav-menu {
             list-style: none;
             color: #4E5969;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
         .nav-menu li {
@@ -69,13 +112,19 @@
             border-radius: 8px;
         }
 
-        .nav-menu li svg {
+        .nav-menu li img {
             width: 16px;
             height: 16px;
+            object-fit: contain;
         }
 
-        .nav-menu li.active svg {
-            color: #FFFFFF;
+        /* 经营总览图标默认为黑色 */
+        .nav-menu li img[alt="经营总览"] {
+            filter: brightness(0);
+        }
+
+        .nav-menu li.active img {
+            filter: brightness(0) invert(1);
         }
 
         /* 右侧内容区样式 */
@@ -232,25 +281,23 @@
         <div class="logo">
             <img src="images/组 94组 94.png" alt="经营管家" style="width: 100%; height: auto;">
         </div>
+        <div class="collapse-btn">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10.3536 3.64645C10.5488 3.84171 10.5488 4.15829 10.3536 4.35355L6.70711 8L10.3536 11.6464C10.5488 11.8417 10.5488 12.1583 10.3536 12.3536C10.1583 12.5488 9.84171 12.5488 9.64645 12.3536L5.64645 8.35355C5.45118 8.15829 5.45118 7.84171 5.64645 7.64645L9.64645 3.64645C9.84171 3.45118 10.1583 3.45118 10.3536 3.64645Z" fill="#4E5969"/>
+            </svg>
+        </div>
         <nav class="nav-menu">
             <li class="nav-item active">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
-                    <path d="M8 1.333a2 2 0 0 1 2 2v9.334a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3.333a2 2 0 0 1 2-2h6zm6 0a2 2 0 0 1 2 2v9.334a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2V3.333a2 2 0 0 1 2-2h2z"/>
-                </svg>
-                经营总览
+                <img src="images/经营总览.svg" alt="经营总览">
+                <span>经营总览</span>
             </li>
             <li class="nav-item">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
-                    <path d="M14.667 2.667H1.333v10.666h13.334V2.667zM1.333 1.333c-.736 0-1.333.597-1.333 1.334v10.666c0 .737.597 1.334 1.333 1.334h13.334c.736 0 1.333-.597 1.333-1.334V2.667c0-.737-.597-1.334-1.333-1.334H1.333z"/>
-                    <path d="M4 6h8v1.333H4V6zm0 2.667h8V10H4V8.667z"/>
-                </svg>
-                门店分析
+                <img src="images/门店分析.svg" alt="门店分析">
+                <span>门店分析</span>
             </li>
             <li class="nav-item">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
-                    <path d="M8 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0-1.333A3.333 3.333 0 1 0 8 7.333 3.333 3.333 0 0 0 8 .667zM8 8.667c2.267 0 6.667 1.133 6.667 3.333v2.667H1.333V12c0-2.2 4.4-3.333 6.667-3.333zm0-1.334c-2.933 0-8 1.467-8 4v4h16v-4c0-2.533-5.067-4-8-4z"/>
-                </svg>
-                客源分析
+                <img src="images/客群分析.svg" alt="客群分析">
+                <span>客群分析</span>
             </li>
         </nav>
     </div>
@@ -337,5 +384,29 @@
             </div>
         </div>
     </div>
+    <script>
+        // 获取所有导航项
+        const navItems = document.querySelectorAll('.nav-item');
+        const sidebar = document.querySelector('.sidebar');
+        const collapseBtn = document.querySelector('.collapse-btn');
+        
+        // 为每个导航项添加点击事件
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                // 移除所有导航项的 active 类
+                navItems.forEach(navItem => {
+                    navItem.classList.remove('active');
+                });
+                
+                // 为当前点击的导航项添加 active 类
+                item.classList.add('active');
+            });
+        });
+
+        // 添加收起/展开功能
+        collapseBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+        });
+    </script>
 </body>
 </html> 
