@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>酒店经营分析 - 总览</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: PingFangSC-Regular, "Microsoft YaHei", sans-serif;
+            background-color: #F5F7FA;
+            display: flex;
+            min-height: 100vh;
+            color: #1D2129;
+        }
+
+        /* 左侧导航样式 */
+        .sidebar {
+            width: 208px;
+            background-color: #f6f6f6;
+            padding: 16px 12px;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            padding: 0 12px;
+            margin-bottom: 24px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: 4px;
+        }
+
+        .logo img {
+            height: 24px;
+            width: 100px;
+            object-fit: contain;
+        }
+
+        .nav-menu {
+            list-style: none;
+            color: #4E5969;
+        }
+
+        .nav-menu li {
+            padding: 0 12px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 8px;
+            gap: 8px;
+        }
+
+        .nav-menu li:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+
+        .nav-menu li.active {
+            background-color: #111925;
+            color: #FFFFFF;
+            border-radius: 8px;
+        }
+
+        .nav-menu li svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .nav-menu li.active svg {
+            color: #FFFFFF;
+        }
+
+        /* 右侧内容区样式 */
+        .content {
+            flex: 1;
+            display: flex;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 24px;
+            background-color: #FFFFFF;
+            border-radius: 12px;
+            min-width: 0; /* 防止内容溢出 */
+        }
+
+        .header {
+            margin-bottom: 16px;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 500;
+            color: #1D2129;
+            line-height: 28px;
+            margin-bottom: 4px;
+        }
+
+        .breadcrumb {
+            font-size: 12px;
+            color: #86909C;
+        }
+
+        /* 卡片样式 */
+        .card {
+            background: #FFFFFF;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #1D2129;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title .more {
+            font-size: 12px;
+            color: #4E5969;
+            font-weight: normal;
+            cursor: pointer;
+        }
+
+        /* 数据概览区域 */
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .overview-item {
+            background: #F7F8FA;
+            border-radius: 4px;
+            padding: 16px;
+        }
+
+        .overview-item .label {
+            font-size: 13px;
+            color: #4E5969;
+            margin-bottom: 8px;
+        }
+
+        .overview-item .value {
+            font-size: 24px;
+            font-weight: 500;
+            color: #1D2129;
+        }
+
+        .overview-item .trend {
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .trend.up {
+            color: #F53F3F;
+        }
+
+        .trend.down {
+            color: #00B42A;
+        }
+
+        /* 图表区域 */
+        .chart-container {
+            height: 300px;
+            margin-top: 16px;
+        }
+
+        /* 表格样式 */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 14px;
+            border-bottom: 1px solid #E5E6EB;
+        }
+
+        .table th {
+            background: #F7F8FA;
+            color: #1D2129;
+            font-weight: 500;
+        }
+
+        .table td {
+            color: #4E5969;
+        }
+
+        /* 按钮和操作区样式 */
+        .button {
+            height: 32px;
+            padding: 0 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .button-primary {
+            background: #165DFF;
+            color: #FFFFFF;
+            border: none;
+        }
+
+        .button-default {
+            background: #FFFFFF;
+            color: #4E5969;
+            border: 1px solid #E5E6EB;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <img src="images/组 94组 94.png" alt="经营管家" style="width: 100%; height: auto;">
+        </div>
+        <nav class="nav-menu">
+            <li class="nav-item active">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M8 1.333a2 2 0 0 1 2 2v9.334a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3.333a2 2 0 0 1 2-2h6zm6 0a2 2 0 0 1 2 2v9.334a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2V3.333a2 2 0 0 1 2-2h2z"/>
+                </svg>
+                经营总览
+            </li>
+            <li class="nav-item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M14.667 2.667H1.333v10.666h13.334V2.667zM1.333 1.333c-.736 0-1.333.597-1.333 1.334v10.666c0 .737.597 1.334 1.333 1.334h13.334c.736 0 1.333-.597 1.333-1.334V2.667c0-.737-.597-1.334-1.333-1.334H1.333z"/>
+                    <path d="M4 6h8v1.333H4V6zm0 2.667h8V10H4V8.667z"/>
+                </svg>
+                门店分析
+            </li>
+            <li class="nav-item">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M8 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0-1.333A3.333 3.333 0 1 0 8 7.333 3.333 3.333 0 0 0 8 .667zM8 8.667c2.267 0 6.667 1.133 6.667 3.333v2.667H1.333V12c0-2.2 4.4-3.333 6.667-3.333zm0-1.334c-2.933 0-8 1.467-8 4v4h16v-4c0-2.533-5.067-4-8-4z"/>
+                </svg>
+                客源分析
+            </li>
+        </nav>
+    </div>
+
+    <div class="content">
+        <div class="main-content">
+            <div class="header">
+                <h1 class="page-title">总览</h1>
+                <div class="breadcrumb">首页 / 总览</div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    数据概览
+                    <span class="more">查看更多</span>
+                </div>
+                <div class="overview-grid">
+                    <div class="overview-item">
+                        <div class="label">今日营收（元）</div>
+                        <div class="value">128,920</div>
+                        <div class="trend up">较昨日 +12.5%</div>
+                    </div>
+                    <div class="overview-item">
+                        <div class="label">入住率</div>
+                        <div class="value">85.6%</div>
+                        <div class="trend down">较昨日 -2.3%</div>
+                    </div>
+                    <div class="overview-item">
+                        <div class="label">平均房价（元）</div>
+                        <div class="value">458</div>
+                        <div class="trend up">较昨日 +5.8%</div>
+                    </div>
+                    <div class="overview-item">
+                        <div class="label">RevPAR（元）</div>
+                        <div class="value">392</div>
+                        <div class="trend up">较昨日 +3.2%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">营收趋势</div>
+                <div class="chart-container">
+                    <!-- 这里将插入图表 -->
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">房型数据</div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>房型</th>
+                            <th>可用房数</th>
+                            <th>入住率</th>
+                            <th>平均房价</th>
+                            <th>营收贡献</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>标准大床房</td>
+                            <td>120</td>
+                            <td>88%</td>
+                            <td>388</td>
+                            <td>41,184</td>
+                        </tr>
+                        <tr>
+                            <td>豪华套房</td>
+                            <td>45</td>
+                            <td>76%</td>
+                            <td>688</td>
+                            <td>23,592</td>
+                        </tr>
+                        <tr>
+                            <td>商务双床房</td>
+                            <td>85</td>
+                            <td>92%</td>
+                            <td>428</td>
+                            <td>33,456</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
