@@ -193,7 +193,7 @@
 
         .main-content {
             flex: 1;
-            padding: 20px 16px 16px 0;
+            padding: 20px 0 16px 0;
             background-color: #FFFFFF;
             border-radius: 12px;
             min-width: 0;
@@ -205,7 +205,7 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 24px;
-            padding: 0 32px;
+            padding: 0 20px 0 32px;
         }
 
         .header-left {
@@ -242,6 +242,7 @@
         .granularity-wrapper {
             position: relative;
             width: 72px;
+            cursor: pointer;
         }
 
         .selected-granularity {
@@ -594,37 +595,117 @@
             gap: 24px;
         }
 
-        .notification {
-            position: relative;
+        .action-btn {
+            width: 24px;
+            height: 24px;
             cursor: pointer;
-        }
-
-        .notification-badge {
-            position: absolute;
-            top: -4px;
-            right: -4px;
-            background: #FF4D4F;
-            border-radius: 50%;
-            width: 16px;
-            height: 16px;
+            position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 12px;
         }
 
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: transparent;
+            transition: background-color 0.3s ease;
+            z-index: 0;
+        }
+
+        .action-btn:hover::before {
+            background-color: #f5f5f5;
+        }
+
+        .action-btn img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            position: relative;
+            z-index: 1;
         }
 
         .user-avatar {
             width: 32px;
             height: 32px;
             border-radius: 50%;
+            cursor: pointer;
+            position: relative;
+        }
+
+        /* 用户下拉面板样式 */
+        .user-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            width: 240px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 16px 16px 12px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .user-dropdown.active {
+            display: block;
+        }
+
+        .user-info {
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #E5E6EB;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar-small {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .user-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .user-name {
+            font-size: 16px;
+            color: #111925;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: #86909C;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .dropdown-btn {
+            color: #111925;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .dropdown-btn:hover {
+            opacity: 0.8;
+        }
+
+        .dropdown-btn img {
+            width: 16px;
+            height: 16px;
         }
 
         /* 卡片样式 */
@@ -743,6 +824,74 @@
             color: #4E5969;
             border: 1px solid #E5E6EB;
         }
+
+        /* 模态弹窗样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 24px;
+            border-radius: 8px;
+            position: relative;
+            width: 400px;
+        }
+
+        .modal-close {
+            position: absolute;
+            right: 16px;
+            top: 16px;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            color: #111925;
+        }
+
+        .avatar-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .ai-assistant {
+            width: 109px;
+            height: 32px;
+            cursor: pointer;
+        }
+
+        .ai-assistant img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
     </style>
 </head>
 <body>
@@ -792,7 +941,7 @@
                             </div>
                             <div class="time-divider"></div>
                             <div class="date-selector">
-                                <span class="selected-date">2024年4月9日</span>
+                                <span class="selected-date">2024-04-09</span>
                                 <div class="date-panel">
                                     <div class="panel-header">
                                         <div class="month-nav">
@@ -865,20 +1014,37 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="search-box">
-                            <img src="images/搜索.svg" alt="搜索" class="search-icon">
-                            <input type="text" placeholder="搜索门店/房型/渠道...">
-                        </div>
                     </div>
                 </div>
                 <div class="header-right">
-                    <div class="notification">
-                        <img src="images/notification.svg" alt="消息">
-                        <span class="notification-badge">3</span>
+                    <div class="search-box">
+                        <img src="images/搜索.svg" alt="搜索" class="search-icon">
+                        <input type="text" placeholder="搜索门店/房型/渠道...">
                     </div>
-                    <div class="user-info">
-                        <img src="images/avatar.svg" alt="用户头像" class="user-avatar">
-                        <span>张三</span>
+                    <div class="action-btn" data-modal="message">
+                        <img src="images/消息.svg" alt="消息">
+                    </div>
+                    <div class="action-btn" data-modal="notification">
+                        <img src="images/提醒.svg" alt="提醒">
+                    </div>
+                    <div class="avatar-wrapper">
+                        <img src="images/头像.svg" alt="用户头像" class="user-avatar">
+                        <div class="user-dropdown">
+                            <div class="user-info">
+                                <img src="images/头像.svg" alt="用户头像" class="user-avatar-small">
+                                <div class="user-details">
+                                    <div class="user-name">苏妈妈</div>
+                                    <div class="user-role">以卡里酒店集团总经理</div>
+                                </div>
+                            </div>
+                            <div class="dropdown-btn" data-modal="logout">
+                                <img src="images/退出登录.svg" alt="退出登录">
+                                退出账号
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ai-assistant">
+                        <img src="images/智能助手.png" alt="智能助手">
                     </div>
                 </div>
             </div>
@@ -958,6 +1124,50 @@
             </div>
         </div>
     </div>
+
+    <!-- 模态弹窗 -->
+    <div class="modal" id="messageModal">
+        <div class="modal-content">
+            <div class="modal-close">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12.5 3.5L3.5 12.5M3.5 3.5L12.5 12.5" stroke="#4E5969" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="modal-title">功能还在开发中，坐下来听首歌吧～</div>
+            <audio controls style="width: 100%">
+                <source src="https://music.163.com/song/media/outer/url?id=1401161549.mp3" type="audio/mpeg">
+                您的浏览器不支持音频播放。
+            </audio>
+        </div>
+    </div>
+
+    <div class="modal" id="notificationModal">
+        <div class="modal-content">
+            <div class="modal-close">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12.5 3.5L3.5 12.5M3.5 3.5L12.5 12.5" stroke="#4E5969" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="modal-title">功能还在开发中，坐下来听首歌吧～</div>
+            <audio controls style="width: 100%">
+                <source src="https://music.163.com/song/media/outer/url?id=1401161549.mp3" type="audio/mpeg">
+                您的浏览器不支持音频播放。
+            </audio>
+        </div>
+    </div>
+
+    <!-- 退出确认弹窗 -->
+    <div class="modal" id="logoutModal">
+        <div class="modal-content">
+            <div class="modal-close">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12.5 3.5L3.5 12.5M3.5 3.5L12.5 12.5" stroke="#4E5969" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="modal-title">酒店不可一日无妈妈</div>
+        </div>
+    </div>
+
     <script>
         // 获取所有导航项
         const navItems = document.querySelectorAll('.nav-item');
@@ -1162,6 +1372,81 @@
 
             // 阻止面板内部点击事件冒泡
             datePanel.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        });
+
+        // 模态弹窗相关
+        document.addEventListener('DOMContentLoaded', function() {
+            const actionBtns = document.querySelectorAll('.action-btn[data-modal]');
+            const modals = document.querySelectorAll('.modal');
+            const closeButtons = document.querySelectorAll('.modal-close');
+
+            // 打开模态弹窗
+            actionBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const modalType = this.getAttribute('data-modal');
+                    const modal = document.getElementById(`${modalType}Modal`);
+                    modal.classList.add('active');
+                });
+            });
+
+            // 关闭模态弹窗
+            closeButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const modal = this.closest('.modal');
+                    modal.classList.remove('active');
+                    // 暂停音频播放
+                    const audio = modal.querySelector('audio');
+                    if (audio) {
+                        audio.pause();
+                        audio.currentTime = 0;
+                    }
+                });
+            });
+
+            // 点击模态弹窗外部关闭
+            modals.forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.classList.remove('active');
+                        // 暂停音频播放
+                        const audio = this.querySelector('audio');
+                        if (audio) {
+                            audio.pause();
+                            audio.currentTime = 0;
+                        }
+                    }
+                });
+            });
+        });
+
+        // 头像下拉面板相关
+        document.addEventListener('DOMContentLoaded', function() {
+            const avatarWrapper = document.querySelector('.avatar-wrapper');
+            const userDropdown = document.querySelector('.user-dropdown');
+            const logoutBtn = document.querySelector('.dropdown-btn[data-modal="logout"]');
+            const logoutModal = document.getElementById('logoutModal');
+
+            // 点击头像显示/隐藏下拉面板
+            avatarWrapper.addEventListener('click', function(e) {
+                e.stopPropagation();
+                userDropdown.classList.toggle('active');
+            });
+
+            // 点击退出按钮
+            logoutBtn.addEventListener('click', function() {
+                userDropdown.classList.remove('active');
+                logoutModal.classList.add('active');
+            });
+
+            // 点击页面其他地方关闭下拉面板
+            document.addEventListener('click', function() {
+                userDropdown.classList.remove('active');
+            });
+
+            // 阻止下拉面板内部点击事件冒泡
+            userDropdown.addEventListener('click', function(e) {
                 e.stopPropagation();
             });
         });
