@@ -1035,10 +1035,13 @@
             gap: 16px;
             margin-left: 16px;
             height: 192px;
+            position: absolute;
+            left: 322px;
+            width: calc(100% - 620px);
         }
 
         .metric-card {
-            width: 200px;
+            flex: 1;
             height: 192px;
             background: #FFFFFF;
             border: 1px solid rgba(17, 25, 37, 0.15);
@@ -1208,6 +1211,43 @@
             font-weight: 600;
             color: #111925;
             margin: 16px 0 24px 12px;
+            position: relative;
+        }
+
+        .user-rating-card .more-actions {
+            position: absolute;
+            right: 12px;
+            top: 16px;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .user-rating-card .more-actions::before {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: transparent;
+            transition: background-color 0.3s ease;
+            z-index: -1;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .user-rating-card .more-actions:hover::before {
+            background-color: rgba(17, 25, 37, 0.1);
+        }
+
+        .user-rating-card .more-actions img {
+            width: 16px;
+            height: 16px;
         }
 
         /* 环形图样式 */
@@ -1731,6 +1771,9 @@
             <!-- 用户评价卡片 -->
             <div class="user-rating-card">
                 <div class="card-title">客户评价</div>
+                <div class="more-actions" onclick="document.getElementById('messageModal').classList.add('active')">
+                    <img src="images/更多操作.svg" alt="更多操作">
+                </div>
                 <div class="rating-circle">
                     <svg width="182" height="182" viewBox="-10 -10 202 202">
                         <defs>
