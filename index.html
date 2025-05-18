@@ -617,7 +617,7 @@
         }
 
         .action-btn:hover::before {
-            background-color: #f5f5f5;
+            background-color: rgba(17, 25, 37, 0.1);
         }
 
         .action-btn img {
@@ -892,6 +892,140 @@
             height: 100%;
             object-fit: contain;
         }
+
+        /* 主卡片样式 */
+        .main-card {
+            width: 306px;
+            height: 192px;
+            margin: 24px 0 0 16px;
+            padding: 0;
+            background-image: url('images/主卡片.png');
+            background-size: cover;
+            background-position: center;
+            border-radius: 12px;
+            color: #111925;
+            position: relative;
+        }
+
+        .main-card .more-actions {
+            position: absolute;
+            top: 20px;
+            right: 12px;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .main-card .more-actions::before {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: transparent;
+            transition: background-color 0.3s ease;
+            z-index: -1;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .main-card .more-actions:hover::before {
+            background-color: rgba(17, 25, 37, 0.1);
+        }
+
+        .main-card .more-actions img {
+            width: 16px;
+            height: 16px;
+        }
+
+        .main-card .greeting {
+            font-size: 14px;
+            line-height: 22px;
+            margin: 0;
+            position: absolute;
+            top: 56px;
+            left: 12px;
+        }
+
+        .main-card .hotel-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .main-card .hotel-name {
+            font-size: 18px;
+            font-weight: bold;
+            line-height: 24px;
+            position: absolute;
+            top: 86px;
+            left: 12px;
+        }
+
+        .main-card .rank-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .main-card .rank-label {
+            font-size: 14px;
+            line-height: 22px;
+            position: absolute;
+            top: 126px;
+            left: 12px;
+        }
+
+        .main-card .rank-value {
+            display: flex;
+            align-items: flex-end;
+            position: absolute;
+            left: 12px;
+            bottom: 12px;
+            gap: 8px;
+        }
+
+        .main-card .rank-value .number {
+            font-size: 24px;
+            font-weight: bold;
+            line-height: 32px;
+            font-family: 'mtnewdigitalDisplay', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .main-card .rank-value .change {
+            font-size: 14px;
+            line-height: 22px;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            margin-bottom: 2px;
+        }
+
+        .main-card .rank-value .change.up {
+            color: #009F5A;
+        }
+
+        .main-card .rank-value .change.down {
+            color: #D90000;
+        }
+
+        .main-card .rank-value .change img {
+            width: 12px;
+            height: 12px;
+        }
+
+        /* 添加本地字体声明 */
+        @font-face {
+            font-family: 'mtnewdigitalDisplay';
+            src: url('fonts/mtnewdigitalDisplay.ttf') format('truetype');
+            font-weight: bold;
+            font-style: normal;
+        }
     </style>
 </head>
 <body>
@@ -1048,79 +1182,22 @@
                     </div>
                 </div>
             </div>
-
-            <div class="card">
-                <div class="card-title">
-                    数据概览
-                    <span class="more">查看更多</span>
+            <!-- 添加主卡片 -->
+            <div class="main-card">
+                <div class="more-actions" data-modal="message">
+                    <img src="images/更多操作.svg" alt="更多操作">
                 </div>
-                <div class="overview-grid">
-                    <div class="overview-item">
-                        <div class="label">今日营收（元）</div>
-                        <div class="value">128,920</div>
-                        <div class="trend up">较昨日 +12.5%</div>
-                    </div>
-                    <div class="overview-item">
-                        <div class="label">入住率</div>
-                        <div class="value">85.6%</div>
-                        <div class="trend down">较昨日 -2.3%</div>
-                    </div>
-                    <div class="overview-item">
-                        <div class="label">平均房价（元）</div>
-                        <div class="value">458</div>
-                        <div class="trend up">较昨日 +5.8%</div>
-                    </div>
-                    <div class="overview-item">
-                        <div class="label">RevPAR（元）</div>
-                        <div class="value">392</div>
-                        <div class="trend up">较昨日 +3.2%</div>
+                <div class="greeting">早上好，苏妈妈</div>
+                <div class="hotel-info">
+                    <div class="hotel-name">以卡里酒店集团</div>
+                    <div class="rank-info">
+                        <span class="rank-label">昨日行业排名</span>
+                        <div class="rank-value">
+                            <span class="number">35</span>
+                            <span class="change down">-3</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">营收趋势</div>
-                <div class="chart-container">
-                    <!-- 这里将插入图表 -->
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">房型数据</div>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>房型</th>
-                            <th>可用房数</th>
-                            <th>入住率</th>
-                            <th>平均房价</th>
-                            <th>营收贡献</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>标准大床房</td>
-                            <td>120</td>
-                            <td>88%</td>
-                            <td>388</td>
-                            <td>41,184</td>
-                        </tr>
-                        <tr>
-                            <td>豪华套房</td>
-                            <td>45</td>
-                            <td>76%</td>
-                            <td>688</td>
-                            <td>23,592</td>
-                        </tr>
-                        <tr>
-                            <td>商务双床房</td>
-                            <td>85</td>
-                            <td>92%</td>
-                            <td>428</td>
-                            <td>33,456</td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>
@@ -1449,6 +1526,86 @@
             userDropdown.addEventListener('click', function(e) {
                 e.stopPropagation();
             });
+        });
+
+        // 添加问候语时间自适应功能
+        function updateGreeting() {
+            const hour = new Date().getHours();
+            const greeting = document.querySelector('.greeting');
+            let timeGreeting = '';
+            
+            if (hour >= 5 && hour < 12) {
+                timeGreeting = '早上好';
+            } else if (hour >= 12 && hour < 18) {
+                timeGreeting = '下午好';
+            } else {
+                timeGreeting = '晚上好';
+            }
+            
+            greeting.textContent = `${timeGreeting}，苏妈妈`;
+        }
+
+        // 页面加载时更新问候语
+        document.addEventListener('DOMContentLoaded', function() {
+            updateGreeting();
+            // ... existing code ...
+        });
+
+        // 更新排名数字和变化值
+        function updateRankNumber() {
+            const rankNumber = document.querySelector('.rank-value .number');
+            const changeElement = document.querySelector('.rank-value .change');
+            
+            // 生成1-100的随机数作为排名
+            const newRank = Math.floor(Math.random() * 100) + 1;
+            // 生成-100到100的随机数作为变化值
+            const change = Math.floor(Math.random() * 201) - 100;
+            
+            // 更新排名数字
+            rankNumber.textContent = newRank;
+            
+            // 更新变化值和样式
+            const absChange = Math.abs(change);
+            const isIncrease = change >= 0;
+            
+            // 更新HTML结构
+            changeElement.innerHTML = `
+                ${absChange}
+                <img src="images/${isIncrease ? '上升' : '下降'}.svg" alt="${isIncrease ? '上升' : '下降'}">
+            `;
+            
+            // 更新样式类
+            changeElement.className = `change ${isIncrease ? 'up' : 'down'}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // ... existing code ...
+            
+            // 初始更新排名
+            updateRankNumber();
+            
+            // 在日期选择器确认按钮点击时更新排名
+            const dateConfirmBtn = document.querySelector('.btn-confirm');
+            dateConfirmBtn.addEventListener('click', updateRankNumber);
+            
+            // 在快速选择今天时更新排名
+            const quickSelectToday = document.querySelector('.quick-select');
+            quickSelectToday.addEventListener('click', updateRankNumber);
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // ... existing code ...
+            
+            // 为主卡片的更多操作按钮添加点击事件
+            const cardMoreActions = document.querySelector('.main-card .more-actions');
+            const messageModal = document.getElementById('messageModal');
+            
+            cardMoreActions.addEventListener('click', function(e) {
+                e.stopPropagation();
+                messageModal.classList.add('active');
+            });
+            
+            // ... existing code ...
         });
     </script>
 </body>
