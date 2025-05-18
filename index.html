@@ -197,6 +197,7 @@
             background-color: #FFFFFF;
             border-radius: 12px;
             min-width: 0;
+            position: relative;
         }
 
         /* 顶部标题区域样式 */
@@ -1188,6 +1189,305 @@
             font-weight: bold;
             font-style: normal;
         }
+
+        /* 用户评价卡片样式 */
+        .user-rating-card {
+            position: absolute;
+            right: 20px;
+            top: 76px;
+            width: 246px;
+            height: 586px;
+            background: #FFFFFF;
+            border: 1px solid rgba(17, 25, 37, 0.15);
+            border-radius: 12px;
+            padding: 0;
+        }
+
+        .user-rating-card .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #111925;
+            margin: 16px 0 24px 12px;
+        }
+
+        /* 环形图样式 */
+        .rating-circle {
+            width: 214px;
+            height: 214px;
+            margin: 0 auto 32px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .rating-circle svg {
+            transform: rotate(-90deg);
+            transform-origin: center;
+            overflow: visible;
+        }
+
+        .rating-circle .donut-segment {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            transform-origin: center;
+            transform-box: fill-box;
+        }
+
+        .rating-circle .donut-segment:hover {
+            opacity: 0.8;
+            transform: scale(1.03) !important;
+        }
+
+        /* 添加数值更新动画 */
+        @keyframes scaleUpdate {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .rating-circle .circle-value {
+            position: absolute;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        .rating-circle .circle-value.updating {
+            animation: scaleUpdate 0.3s ease-out;
+        }
+
+        /* 浮窗样式 */
+        .segment-tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.75);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            line-height: 20px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            white-space: nowrap;
+            z-index: 10;
+        }
+
+        .segment-tooltip.visible {
+            opacity: 1;
+        }
+
+        .rating-circle .circle-value .value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #111925;
+            line-height: 32px;
+            font-family: 'mtnewdigitalDisplay', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .rating-circle .circle-value .label {
+            font-size: 14px;
+            color: #111925;
+            line-height: 22px;
+        }
+
+        /* 分层透视样式 */
+        .rating-breakdown {
+            margin-top: 36px;
+        }
+
+        .rating-breakdown .breakdown-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0 12px 26px;
+        }
+
+        .rating-breakdown .breakdown-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #111925;
+        }
+
+        .rating-breakdown .dimension-selector {
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .rating-breakdown .selected-dimension {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 14px;
+            color: #111925;
+        }
+
+        .rating-breakdown .dimension-arrow {
+            width: 12px;
+            height: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .rating-breakdown .dimension-selector.active .dimension-arrow {
+            transform: rotate(180deg);
+        }
+
+        .rating-breakdown .dimension-options {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 4px 0;
+            display: none;
+            z-index: 1000;
+            min-width: 90px;
+        }
+
+        .rating-breakdown .dimension-selector.active .dimension-options {
+            display: block;
+        }
+
+        .rating-breakdown .dimension-option {
+            padding: 8px 12px;
+            font-size: 14px;
+            color: #111925;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            line-height: 20px;
+            white-space: nowrap;
+        }
+
+        .rating-breakdown .dimension-option:hover {
+            background: #F2F3F5;
+        }
+
+        .rating-breakdown .dimension-option.selected {
+            color: #165DFF;
+            background-color: #F2F3F5;
+        }
+
+        .rating-breakdown .breakdown-item {
+            margin-bottom: 26px;
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+        }
+
+        .rating-breakdown .breakdown-item .age-range {
+            font-size: 14px;
+            color: #111925;
+            width: 80px;
+            margin-right: 8px;
+        }
+
+        .rating-breakdown .breakdown-item .bar-container {
+            flex: 1;
+            height: 8px;
+            background: #F2F3F5;
+            border-radius: 4px;
+            margin-right: 8px;
+            display: flex;
+            overflow: visible;
+            gap: 1px;
+            position: relative;
+        }
+
+        .rating-breakdown .breakdown-item .bar-segment {
+            height: 100%;
+            border-radius: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            transform-origin: center;
+            position: relative;
+        }
+
+        .rating-breakdown .breakdown-item .bar-segment.score-5 {
+            background-color: #ffd100;
+            border-radius: 4px 0 0 4px;
+        }
+
+        .rating-breakdown .breakdown-item .bar-segment.score-4 {
+            background-color: #ffef8a;
+            border-radius: 0;
+        }
+
+        .rating-breakdown .breakdown-item .bar-segment.score-3 {
+            background-color: rgba(17, 25, 37, 0.15);
+            border-radius: 0;
+        }
+
+        .rating-breakdown .breakdown-item .bar-segment.score-2 {
+            background-color: rgba(17, 25, 37, 0.45);
+            border-radius: 0;
+        }
+
+        .rating-breakdown .breakdown-item .bar-segment.score-1 {
+            background-color: #111925;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .rating-breakdown .breakdown-item .bar-segment:only-child {
+            border-radius: 4px;
+        }
+
+        .rating-breakdown .breakdown-item .bar-segment:hover {
+            transform: scale(1.1);
+            z-index: 2;
+        }
+
+        .rating-breakdown .breakdown-item .score {
+            font-size: 14px;
+            color: #111925;
+            width: 40px;
+            text-align: right;
+            font-family: 'mtnewdigital', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+                    .rating-breakdown .bar-tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.75);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            line-height: 20px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            white-space: nowrap;
+            z-index: 10;
+            top: -40px;
+            left: 50%;
+            transform: translate(-50%, 0);
+            visibility: hidden;
+        }
+
+        .rating-breakdown .bar-tooltip.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        @keyframes barScaleUpdate {
+            0% { transform: scaleY(0.8); opacity: 0; }
+            100% { transform: scaleY(1); opacity: 1; }
+        }
+
+        .rating-breakdown .breakdown-item .bar-segment.updating {
+            animation: barScaleUpdate 0.3s ease-out;
+        }
+
+        .rating-breakdown .breakdown-item .bar-segment:first-child {
+            border-radius: 4px 1px 1px 4px;
+        }
+
+        .rating-breakdown .breakdown-item .bar-segment:last-child {
+            border-radius: 1px 4px 4px 1px;
+        }
+
+        .rating-breakdown .breakdown-item .bar-segment:only-child {
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
@@ -1424,6 +1724,80 @@
                                 <span class="comparison-value up">7.03%</span>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 用户评价卡片 -->
+            <div class="user-rating-card">
+                <div class="card-title">客户评价</div>
+                <div class="rating-circle">
+                    <svg width="182" height="182" viewBox="-10 -10 202 202">
+                        <defs>
+                            <!-- 为每个扇区添加圆角 -->
+                            <filter id="segment-shadow">
+                                <feGaussianBlur in="SourceAlpha" stdDeviation="1"/>
+                            </filter>
+                        </defs>
+                        <!-- 扇区将通过JavaScript动态生成 -->
+                    </svg>
+                    <div class="circle-value">
+                        <div class="value">3.85</div>
+                        <div class="label">平均得分</div>
+                    </div>
+                    <div class="segment-tooltip"></div>
+                </div>
+                <div class="rating-breakdown">
+                    <div class="breakdown-header">
+                        <div class="breakdown-title">分层透视</div>
+                        <div class="dimension-selector" id="dimensionSelector">
+                            <div class="selected-dimension" id="selectedDimension">
+                                按年龄
+                                <svg class="dimension-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M2.5 4.5L6 8L9.5 4.5" stroke="#4E5969" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                            <div class="dimension-options" id="dimensionOptions">
+                                <div class="dimension-option selected" data-dimension="age">按年龄</div>
+                                <div class="dimension-option" data-dimension="gender">按性别</div>
+                                <div class="dimension-option" data-dimension="education">按学历</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="age-range">0-18 岁</span>
+                        <div class="bar-container">
+                            <div class="bar" style="width: 62.4%;"></div>
+                        </div>
+                        <span class="score">3.12</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="age-range">18-30 岁</span>
+                        <div class="bar-container">
+                            <div class="bar" style="width: 86.2%;"></div>
+                        </div>
+                        <span class="score">4.31</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="age-range">30-45 岁</span>
+                        <div class="bar-container">
+                            <div class="bar" style="width: 61.6%;"></div>
+                        </div>
+                        <span class="score">3.08</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="age-range">30-45 岁</span>
+                        <div class="bar-container">
+                            <div class="bar" style="width: 62.4%;"></div>
+                        </div>
+                        <span class="score">3.12</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="age-range">45+ 岁</span>
+                        <div class="bar-container">
+                            <div class="bar" style="width: 57.6%;"></div>
+                        </div>
+                        <span class="score">2.88</span>
                     </div>
                 </div>
             </div>
@@ -1906,6 +2280,452 @@
                 e.stopPropagation();
                 messageModal.classList.add('active');
             });
+        });
+
+        // 环形图相关代码
+        document.addEventListener('DOMContentLoaded', function() {
+            const svg = document.querySelector('.rating-circle svg');
+            const tooltip = document.querySelector('.segment-tooltip');
+
+            // 生成随机数据的函数
+            function generateRandomData() {
+                const data = [];
+                let totalScore = 0;
+                let totalPercentage = 0;
+
+                // 生成1-5分的随机百分比
+                for (let score = 1; score <= 5; score++) {
+                    const percentage = parseFloat((Math.random() * 20 + 5).toFixed(2)); // 5-25之间的随机数
+                    totalScore += score * percentage;
+                    totalPercentage += percentage;
+                    data.push({ 
+                        score, 
+                        percentage, 
+                        color: getScoreColor(score) 
+                    });
+                }
+
+                // 归一化百分比确保总和为100
+                data.forEach(item => {
+                    item.percentage = parseFloat((item.percentage / totalPercentage * 100).toFixed(2));
+                });
+
+                return data;
+            }
+
+            // 获取分数对应的颜色
+            function getScoreColor(score) {
+                switch(score) {
+                    case 1: return '#111925';
+                    case 2: return 'rgba(17, 25, 37, 0.45)';
+                    case 3: return 'rgba(17, 25, 37, 0.15)';
+                    case 4: return '#ffef8a';
+                    case 5: return '#ffd100';
+                }
+            }
+
+            // 生成评分分布的函数
+            function generateScoreDistribution(averageScore) {
+                const distribution = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0};
+                let total = 0;
+                
+                // 基于平均分生成合理的分布
+                for (let score = 1; score <= 5; score++) {
+                    const weight = Math.exp(-Math.pow(score - averageScore, 2) / 2);
+                    distribution[score] = parseFloat((weight * 20 + Math.random() * 5).toFixed(1));
+                    total += distribution[score];
+                }
+                
+                // 归一化确保总和为100%
+                for (let score = 1; score <= 5; score++) {
+                    distribution[score] = parseFloat((distribution[score] / total * 100).toFixed(1));
+                }
+                
+                return distribution;
+            }
+
+            // 更新环形图的函数
+            function updateDonutChart() {
+                // 清空现有的扇区
+                while (svg.firstChild) {
+                    if (svg.lastChild.tagName === 'defs') break;
+                    svg.removeChild(svg.lastChild);
+                }
+
+                const data = generateRandomData();
+                const radius = 91;
+                const innerRadius = 63;
+                const center = radius;
+                let startAngle = 0;
+
+                // 计算平均分
+                const averageScore = data.reduce((acc, item) => acc + (item.score * item.percentage / 100), 0);
+                document.querySelector('.rating-circle .circle-value .value').textContent = averageScore.toFixed(2);
+
+                // 创建扇区
+                data.forEach((item) => {
+                    const percentage = item.percentage / 100;
+                    const angle = percentage * 360;
+                    const endAngle = startAngle + angle;
+                    
+                    const startRad = (startAngle - 90) * Math.PI / 180;
+                    const endRad = (endAngle - 90) * Math.PI / 180;
+                    
+                    const x1 = center + radius * Math.cos(startRad);
+                    const y1 = center + radius * Math.sin(startRad);
+                    const x2 = center + radius * Math.cos(endRad);
+                    const y2 = center + radius * Math.sin(endRad);
+                    
+                    const xi1 = center + innerRadius * Math.cos(startRad);
+                    const yi1 = center + innerRadius * Math.sin(startRad);
+                    const xi2 = center + innerRadius * Math.cos(endRad);
+                    const yi2 = center + innerRadius * Math.sin(endRad);
+
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    const largeArcFlag = angle > 180 ? 1 : 0;
+                    
+                    const d = [
+                        `M ${xi1} ${yi1}`,
+                        `L ${x1} ${y1}`,
+                        `A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2}`,
+                        `L ${xi2} ${yi2}`,
+                        `A ${innerRadius} ${innerRadius} 0 ${largeArcFlag} 0 ${xi1} ${yi1}`,
+                        'Z'
+                    ].join(' ');
+
+                    path.setAttribute('d', d);
+                    path.setAttribute('fill', item.color);
+                    path.setAttribute('class', 'donut-segment');
+                    
+                    // 添加圆角和间隔
+                    path.setAttribute('stroke', '#fff');
+                    path.setAttribute('stroke-width', '2');
+                    path.style.strokeLinejoin = 'round';
+                    path.style.strokeLinecap = 'round';
+
+                    // 添加hover事件
+                    path.addEventListener('mousemove', (e) => {
+                        const rect = svg.getBoundingClientRect();
+                        tooltip.innerHTML = `${item.score}分: ${item.percentage.toFixed(1)}%`;
+                        tooltip.style.left = (e.clientX - rect.left + 10) + 'px';
+                        tooltip.style.top = (e.clientY - rect.top - 25) + 'px';
+                        tooltip.classList.add('visible');
+                    });
+
+                    path.addEventListener('mouseleave', () => {
+                        tooltip.classList.remove('visible');
+                    });
+
+                    svg.appendChild(path);
+                    startAngle = endAngle + 1;
+                });
+            }
+
+            // 更新堆叠条形图的函数
+            function updateStackedBars(selectedDimension = 'age') {
+                const dimensionData = {
+                    age: [
+                        { range: '0-18 岁', score: 3.12 },
+                        { range: '18-30 岁', score: 4.31 },
+                        { range: '30-45 岁', score: 3.08 },
+                        { range: '30-45 岁', score: 3.12 },
+                        { range: '45+ 岁', score: 2.88 }
+                    ],
+                    gender: [
+                        { range: '男性', score: 3.85 },
+                        { range: '女性', score: 4.12 }
+                    ],
+                    education: [
+                        { range: '高中及以下', score: 3.45 },
+                        { range: '大专', score: 3.78 },
+                        { range: '本科', score: 4.15 },
+                        { range: '硕士及以上', score: 4.32 }
+                    ]
+                };
+
+                const breakdownContainer = document.querySelector('.rating-breakdown');
+                const existingItems = breakdownContainer.querySelectorAll('.breakdown-item');
+                existingItems.forEach(item => item.remove());
+
+                dimensionData[selectedDimension].forEach(group => {
+                    const distribution = generateScoreDistribution(group.score);
+                    
+                    const item = document.createElement('div');
+                    item.className = 'breakdown-item';
+                    
+                    const range = document.createElement('span');
+                    range.className = 'age-range';
+                    range.textContent = group.range;
+                    
+                    const barContainer = document.createElement('div');
+                    barContainer.className = 'bar-container';
+                    
+                    // 添加分数段
+                    for (let score = 1; score <= 5; score++) {
+                        if (distribution[score] > 0) {
+                            const segment = document.createElement('div');
+                            segment.className = `bar-segment score-${score}`;
+                            segment.style.width = `${distribution[score]}%`;
+                            
+                            const tooltip = document.createElement('div');
+                            tooltip.className = 'bar-tooltip';
+                            segment.appendChild(tooltip);
+                            
+                            segment.addEventListener('mousemove', (e) => {
+                                tooltip.innerHTML = `${score}分: ${distribution[score].toFixed(1)}%`;
+                                tooltip.classList.add('visible');
+                            });
+
+                            segment.addEventListener('mouseleave', () => {
+                                tooltip.classList.remove('visible');
+                            });
+                            
+                            barContainer.appendChild(segment);
+                        }
+                    }
+                    
+                    const scoreValue = document.createElement('span');
+                    scoreValue.className = 'score';
+                    scoreValue.textContent = group.score.toFixed(2);
+                    
+                    item.appendChild(range);
+                    item.appendChild(barContainer);
+                    item.appendChild(scoreValue);
+                    breakdownContainer.appendChild(item);
+                });
+            }
+
+            // 初始化维度选择器
+            function initializeDimensionSelector() {
+        const dimensionSelector = document.querySelector('.dimension-selector');
+        const selectedDimension = dimensionSelector.querySelector('.selected-dimension');
+        const dimensionOptions = dimensionSelector.querySelector('.dimension-options');
+        const options = dimensionOptions.querySelectorAll('.dimension-option');
+
+        // 使用onclick而不是addEventListener
+        selectedDimension.onclick = function(e) {
+            e.stopPropagation();
+            dimensionSelector.classList.toggle('active');
+        };
+
+        options.forEach(option => {
+            option.onclick = function(e) {
+                e.stopPropagation();
+                
+                options.forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+                
+                const dimensionText = this.textContent;
+                selectedDimension.innerHTML = `
+                    ${dimensionText}
+                    <svg class="dimension-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M2.5 4.5L6 8L9.5 4.5" stroke="#4E5969" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                `;
+                
+                dimensionSelector.classList.remove('active');
+                updateStackedBars(this.dataset.dimension);
+            };
+        });
+
+        document.onclick = function(e) {
+            if (!dimensionSelector.contains(e.target)) {
+                dimensionSelector.classList.remove('active');
+            }
+        };
+
+        dimensionOptions.onclick = function(e) {
+            e.stopPropagation();
+        };
+    }
+
+            // 初始化图表
+            updateDonutChart();
+            updateStackedBars('age');
+            initializeDimensionSelector();
+
+            // 绑定日期更新事件
+            const dateConfirmBtn = document.querySelector('.btn-confirm');
+            const quickSelectToday = document.querySelector('.quick-select');
+            
+            dateConfirmBtn.addEventListener('click', function() {
+                updateDonutChart();
+                const selectedDimension = document.querySelector('.dimension-option.selected').dataset.dimension;
+                updateStackedBars(selectedDimension);
+            });
+            
+            quickSelectToday.addEventListener('click', function() {
+                updateDonutChart();
+                const selectedDimension = document.querySelector('.dimension-option.selected').dataset.dimension;
+                updateStackedBars(selectedDimension);
+            });
+        });
+
+        // ... existing code ...
+        document.addEventListener('DOMContentLoaded', function() {
+            // ... existing code ...
+
+            // 为分层透视维度选择器添加事件监听
+            function initializeDimensionSelector() {
+                const dimensionSelector = document.querySelector('.dimension-selector');
+                const selectedDimension = dimensionSelector.querySelector('.selected-dimension');
+                const dimensionOptions = dimensionSelector.querySelector('.dimension-options');
+                const options = dimensionOptions.querySelectorAll('.dimension-option');
+
+                // 点击选择器显示/隐藏选项
+                selectedDimension.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    dimensionSelector.classList.toggle('active');
+                });
+
+                // 点击选项时更新选中值
+                options.forEach(option => {
+                    option.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        
+                        // 更新选中状态
+                        options.forEach(opt => opt.classList.remove('selected'));
+                        this.classList.add('selected');
+                        
+                        // 更新显示的维度文本
+                        const dimensionText = this.textContent;
+                        selectedDimension.innerHTML = `
+                            ${dimensionText}
+                            <svg class="dimension-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M2.5 4.5L6 8L9.5 4.5" stroke="#4E5969" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        `;
+                        
+                        // 关闭下拉面板
+                        dimensionSelector.classList.remove('active');
+                        
+                        // 更新数据
+                        const newDimension = this.dataset.dimension;
+                        updateChart(newDimension);
+                    });
+                });
+
+                // 点击页面其他地方关闭下拉面板
+                document.addEventListener('click', function() {
+                    dimensionSelector.classList.remove('active');
+                });
+
+                // 阻止下拉面板的点击事件冒泡
+                dimensionOptions.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            }
+
+            // 初始化维度选择器
+            initializeDimensionSelector();
+
+            // ... existing code ...
+        });
+        // ... existing code ...
+
+        // 切换维度选择器的显示/隐藏
+        function toggleDimensionSelector(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            const dimensionSelector = document.getElementById('dimensionSelector');
+            dimensionSelector.classList.toggle('active');
+        }
+
+        // 处理维度切换
+        function handleDimensionChange(element, dimension) {
+            event.preventDefault();
+            event.stopPropagation();
+            
+            // 更新选中状态
+            const options = document.querySelectorAll('.dimension-option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+            
+            // 更新显示的维度文本
+            const selectedDimension = document.getElementById('selectedDimension');
+            selectedDimension.innerHTML = `
+                ${element.textContent}
+                <svg class="dimension-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2.5 4.5L6 8L9.5 4.5" stroke="#4E5969" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            `;
+            
+            // 关闭下拉面板
+            document.getElementById('dimensionSelector').classList.remove('active');
+            
+            // 更新堆叠条形图
+            updateStackedBars(dimension);
+        }
+
+        // 点击页面其他地方关闭下拉面板
+        document.addEventListener('click', function(event) {
+            const dimensionSelector = document.getElementById('dimensionSelector');
+            if (!dimensionSelector.contains(event.target)) {
+                dimensionSelector.classList.remove('active');
+            }
+        });
+
+        // 阻止维度选项面板的点击事件冒泡
+        document.getElementById('dimensionOptions').addEventListener('click', function(event) {
+            event.stopPropagation();
+        });
+
+        // 维度选择器功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const dimensionSelector = document.getElementById('dimensionSelector');
+            const selectedDimension = document.getElementById('selectedDimension');
+            const dimensionOptions = document.getElementById('dimensionOptions');
+            
+            if (!dimensionSelector || !selectedDimension || !dimensionOptions) {
+                console.error('维度选择器元素未找到');
+                return;
+            }
+
+            // 为选择器添加点击事件
+            selectedDimension.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                dimensionSelector.classList.toggle('active');
+            });
+            
+            // 为选项添加点击事件（使用事件委托）
+            dimensionOptions.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const option = e.target.closest('.dimension-option');
+                if (!option) return;
+                
+                // 更新选中状态
+                const options = dimensionOptions.querySelectorAll('.dimension-option');
+                options.forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
+                
+                // 更新显示的维度文本
+                selectedDimension.innerHTML = `
+                    ${option.textContent}
+                    <svg class="dimension-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M2.5 4.5L6 8L9.5 4.5" stroke="#4E5969" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                `;
+                
+                // 关闭下拉面板
+                dimensionSelector.classList.remove('active');
+                
+                // 更新堆叠条形图
+                updateStackedBars(option.dataset.dimension);
+            });
+            
+            // 点击页面其他地方关闭下拉面板
+            document.addEventListener('click', function(e) {
+                if (!dimensionSelector.contains(e.target)) {
+                    dimensionSelector.classList.remove('active');
+                }
+            });
+
+            // 添加调试日志
+            console.log('维度选择器初始化完成');
+            console.log('选择器元素:', dimensionSelector);
+            console.log('选中维度元素:', selectedDimension);
+            console.log('选项容器:', dimensionOptions);
         });
     </script>
 </body>
