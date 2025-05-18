@@ -17,53 +17,67 @@
             display: flex;
             min-height: 100vh;
             color: #1D2129;
+            position: relative;
         }
 
         /* 左侧导航样式 */
         .sidebar {
-            width: 208px;
+            width: 208px; /* 展开状态下的宽度 */
             background-color: #f6f6f6;
             padding: 16px 12px;
             flex-shrink: 0;
-            transition: width 0.3s ease;
+            transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1); /* 使用贝塞尔曲线实现平滑的宽度过渡动画 */
             position: relative;
         }
 
+        /* 左侧导航收起状态样式 */
         .sidebar.collapsed {
-            width: 65px;
+            width: 65px; /* 收起状态下的宽度 */
+            padding: 16px 0;
         }
 
         .logo {
             margin-bottom: 20px;
             height: 64px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border-radius: 4px;
+            position: relative;
+            padding: 0 12px;
         }
 
+        /* Logo 展开状态样式 */
         .logo img.expanded-logo {
             height: 64px;
             width: 135px;
             object-fit: contain;
-            display: block;
+            opacity: 1;
+            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Logo透明度过渡动画 */
+            position: absolute;
         }
 
+        /* Logo 收起状态样式 */
         .logo img.collapsed-logo {
-            display: none;
             width: 32px;
             height: 32px;
             object-fit: contain;
+            opacity: 0;
+            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Logo透明度过渡动画 */
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 16px;
         }
 
+        /* 控制Logo在收起状态下的显示/隐藏 */
         .sidebar.collapsed .logo img.expanded-logo {
-            display: none;
+            opacity: 0;
+            visibility: hidden;
         }
 
         .sidebar.collapsed .logo img.collapsed-logo {
-            display: block;
+            opacity: 1;
+            visibility: visible;
         }
 
+        /* 收起按钮样式 */
         .collapse-btn {
             position: absolute;
             right: -12px;
@@ -78,14 +92,18 @@
             justify-content: center;
             cursor: pointer;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 9999;
         }
 
+        /* 收起按钮图标动效 */
         .collapse-btn svg {
             width: 16px;
             height: 16px;
-            transition: transform 0.3s ease;
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1); /* 使用贝塞尔曲线实现平滑的旋转动画 */
+            will-change: transform; /* 提示浏览器transform属性即将改变，优化性能 */
         }
 
+        /* 收起状态下按钮图标旋转180度 */
         .sidebar.collapsed .collapse-btn svg {
             transform: rotate(180deg);
         }
@@ -99,14 +117,42 @@
         }
 
         .nav-menu li {
-            padding: 0 12px;
             height: 40px;
             display: flex;
             align-items: center;
             cursor: pointer;
             font-size: 14px;
             border-radius: 8px;
-            gap: 8px;
+            padding: 0 12px;
+            position: relative;
+            will-change: width, padding;
+        }
+
+        .nav-menu li img {
+            width: 16px;
+            height: 16px;
+            object-fit: contain;
+            position: absolute;
+            left: 12px;
+            will-change: transform;
+        }
+
+        .nav-menu li span {
+            padding-left: 28px;
+            white-space: nowrap;
+            opacity: 1;
+            transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: opacity;
+        }
+
+        /* 经营总览图标默认为黑色 */
+        .nav-menu li img[alt="经营总览"] {
+            filter: brightness(0);
+        }
+
+        /* 选中状态下所有图标（包括经营总览）变为白色 */
+        .nav-menu li.active img {
+            filter: brightness(0) invert(1) !important;
         }
 
         .sidebar.collapsed .nav-menu li {
@@ -116,8 +162,15 @@
             justify-content: center;
         }
 
-        .sidebar.collapsed .nav-menu span {
-            display: none;
+        .sidebar.collapsed .nav-menu li img {
+            position: static;
+        }
+
+        .sidebar.collapsed .nav-menu li span {
+            opacity: 0;
+            width: 0;
+            padding: 0;
+            visibility: hidden;
         }
 
         .nav-menu li:hover {
@@ -130,25 +183,12 @@
             border-radius: 8px;
         }
 
-        .nav-menu li img {
-            width: 16px;
-            height: 16px;
-            object-fit: contain;
-        }
-
-        /* 经营总览图标默认为黑色 */
-        .nav-menu li img[alt="经营总览"] {
-            filter: brightness(0);
-        }
-
-        .nav-menu li.active img {
-            filter: brightness(0) invert(1);
-        }
-
         /* 右侧内容区样式 */
         .content {
             flex: 1;
             display: flex;
+            position: relative;
+            z-index: 1;
         }
 
         .main-content {
@@ -156,7 +196,7 @@
             padding: 24px;
             background-color: #FFFFFF;
             border-radius: 12px;
-            min-width: 0; /* 防止内容溢出 */
+            min-width: 0;
         }
 
         .header {
@@ -422,7 +462,7 @@
             });
         });
 
-        // 添加收起/展开功能
+        // 添加收起/展开功能 - 通过切换collapsed类来触发过渡动画
         collapseBtn.addEventListener('click', () => {
             sidebar.classList.toggle('collapsed');
         });
