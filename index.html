@@ -30,15 +30,38 @@
         }
 
         .sidebar.collapsed {
-            width: 56px;
+            width: 65px;
         }
 
-        .sidebar.collapsed .logo img {
-            width: 32px;
+        .logo {
+            margin-bottom: 20px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: 4px;
         }
 
-        .sidebar.collapsed .nav-menu span {
+        .logo img.expanded-logo {
+            height: 64px;
+            width: 135px;
+            object-fit: contain;
+            display: block;
+        }
+
+        .logo img.collapsed-logo {
             display: none;
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+
+        .sidebar.collapsed .logo img.expanded-logo {
+            display: none;
+        }
+
+        .sidebar.collapsed .logo img.collapsed-logo {
+            display: block;
         }
 
         .collapse-btn {
@@ -67,22 +90,6 @@
             transform: rotate(180deg);
         }
 
-        .logo {
-            padding: 0 12px;
-            margin-bottom: 24px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border-radius: 4px;
-        }
-
-        .logo img {
-            height: 24px;
-            width: 100px;
-            object-fit: contain;
-        }
-
         .nav-menu {
             list-style: none;
             color: #4E5969;
@@ -100,6 +107,17 @@
             font-size: 14px;
             border-radius: 8px;
             gap: 8px;
+        }
+
+        .sidebar.collapsed .nav-menu li {
+            width: 40px;
+            margin: 0 auto;
+            padding: 0;
+            justify-content: center;
+        }
+
+        .sidebar.collapsed .nav-menu span {
+            display: none;
         }
 
         .nav-menu li:hover {
@@ -279,7 +297,8 @@
 <body>
     <div class="sidebar">
         <div class="logo">
-            <img src="images/组 94组 94.png" alt="经营管家" style="width: 100%; height: auto;">
+            <img class="expanded-logo" src="images/组 94组 94.png" alt="经营管家">
+            <img class="collapsed-logo" src="images/收起logo.png" alt="经营管家">
         </div>
         <div class="collapse-btn">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
