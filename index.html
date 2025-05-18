@@ -897,7 +897,7 @@
         .main-card {
             width: 306px;
             height: 192px;
-            margin: 24px 0 0 16px;
+            margin: 0 0 0 16px;
             padding: 0;
             background-image: url('images/主卡片.png');
             background-size: cover;
@@ -1004,25 +1004,187 @@
             align-items: center;
             gap: 2px;
             margin-bottom: 2px;
+            font-family: 'mtnewdigital', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
         .main-card .rank-value .change.up {
-            color: #009F5A;
+            color: #009f5a;
         }
 
         .main-card .rank-value .change.down {
-            color: #D90000;
+            color: #d90000;
         }
 
         .main-card .rank-value .change img {
-            width: 12px;
-            height: 12px;
+            width: 16px;
+            height: 16px;
         }
 
         /* 添加本地字体声明 */
         @font-face {
             font-family: 'mtnewdigitalDisplay';
             src: url('fonts/mtnewdigitalDisplay.ttf') format('truetype');
+            font-weight: bold;
+            font-style: normal;
+        }
+
+        /* 指标卡片样式 */
+        .metrics-cards {
+            display: flex;
+            gap: 16px;
+            margin-left: 16px;
+            height: 192px;
+        }
+
+        .metric-card {
+            width: 200px;
+            height: 192px;
+            background: #FFFFFF;
+            border: 1px solid rgba(17, 25, 37, 0.15);
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .metric-card .more-actions {
+            position: absolute;
+            top: 24px;
+            right: 12px;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .metric-card .more-actions::before {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: transparent;
+            transition: background-color 0.3s ease;
+            z-index: -1;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .metric-card .more-actions:hover::before {
+            background-color: rgba(17, 25, 37, 0.1);
+        }
+
+        .metric-card .more-actions img {
+            width: 16px;
+            height: 16px;
+        }
+
+        .metric-card .icon-wrapper {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 16px;
+            left: 12px;
+        }
+
+        .metric-card .icon-wrapper img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .metric-card .metric-title {
+            font-size: 14px;
+            line-height: 22px;
+            color: #111925;
+            font-family: PingFangSC-Medium, "Microsoft YaHei", sans-serif;
+            font-weight: 500;
+            position: absolute;
+            top: 87px;
+            left: 12px;
+        }
+
+        .metric-card .metric-value {
+            font-family: 'mtnewdigitalDisplay', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 24px;
+            line-height: 32px;
+            color: #111925;
+            font-weight: bold;
+            position: absolute;
+            top: 120px;
+            left: 12px;
+        }
+
+        .metric-card .metric-value.currency::before {
+            content: '¥';
+            font-family: PingFangSC-Regular, "Microsoft YaHei", sans-serif;
+            font-size: 14px;
+            margin-right: 4px;
+        }
+
+        .metric-card .metric-value.percentage::after {
+            content: '%';
+            font-family: PingFangSC-Regular, "Microsoft YaHei", sans-serif;
+            font-size: 14px;
+            margin-left: 4px;
+        }
+
+        .metric-card .metric-comparison {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            white-space: nowrap;
+        }
+
+        .metric-card .comparison-item {
+            display: flex;
+            align-items: center;
+            color: rgba(17, 25, 37, 0.3);
+            font-size: 12px;
+            line-height: 20px;
+            white-space: nowrap;
+        }
+
+        .metric-card .comparison-item:first-child {
+            margin-right: 12px;
+        }
+
+        .metric-card .comparison-value {
+            display: flex;
+            align-items: center;
+            margin-left: 6px;
+            font-family: 'mtnewdigital', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .metric-card .comparison-value.up {
+            color: #009f5a;
+        }
+
+        .metric-card .comparison-value.down {
+            color: #d90000;
+        }
+
+        .metric-card .comparison-value.up::before,
+        .metric-card .comparison-value.down::before {
+            content: none;
+        }
+
+        .metric-card .comparison-value img {
+            width: 16px;
+            height: 16px;
+            margin-left: 2px;
+        }
+
+        @font-face {
+            font-family: 'mtnewdigital';
+            src: url('fonts/mtnewdigital.ttf') format('truetype');
             font-weight: bold;
             font-style: normal;
         }
@@ -1182,19 +1344,85 @@
                     </div>
                 </div>
             </div>
-            <!-- 添加主卡片 -->
-            <div class="main-card">
-                <div class="more-actions" data-modal="message">
-                    <img src="images/更多操作.svg" alt="更多操作">
+            <div style="display: flex; margin-top: 12px; height: 192px;">
+                <div class="main-card">
+                    <div class="more-actions" data-modal="message">
+                        <img src="images/更多操作.svg" alt="更多操作">
+                    </div>
+                    <div class="greeting">早上好，苏妈妈</div>
+                    <div class="hotel-info">
+                        <div class="hotel-name">以卡里酒店集团</div>
+                        <div class="rank-info">
+                            <span class="rank-label">昨日行业排名</span>
+                            <div class="rank-value">
+                                <span class="number">35</span>
+                                <span class="change down">-3</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="greeting">早上好，苏妈妈</div>
-                <div class="hotel-info">
-                    <div class="hotel-name">以卡里酒店集团</div>
-                    <div class="rank-info">
-                        <span class="rank-label">昨日行业排名</span>
-                        <div class="rank-value">
-                            <span class="number">35</span>
-                            <span class="change down">-3</span>
+                <div class="metrics-cards">
+                    <!-- 总营收卡片 -->
+                    <div class="metric-card">
+                        <div class="more-actions" data-modal="message">
+                            <img src="images/更多操作.svg" alt="更多操作">
+                        </div>
+                        <div class="icon-wrapper">
+                            <img src="images/总营收.svg" alt="总营收">
+                        </div>
+                        <div class="metric-title">总营收</div>
+                        <div class="metric-value currency">32,423,430.00</div>
+                        <div class="metric-comparison">
+                            <div class="comparison-item">
+                                同比
+                                <span class="comparison-value up">12.13%</span>
+                            </div>
+                            <div class="comparison-item">
+                                环比
+                                <span class="comparison-value down">2.33%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 入住率卡片 -->
+                    <div class="metric-card">
+                        <div class="more-actions" data-modal="message">
+                            <img src="images/更多操作.svg" alt="更多操作">
+                        </div>
+                        <div class="icon-wrapper">
+                            <img src="images/入住率.svg" alt="入住率">
+                        </div>
+                        <div class="metric-title">入住率</div>
+                        <div class="metric-value percentage">56.88</div>
+                        <div class="metric-comparison">
+                            <div class="comparison-item">
+                                同比
+                                <span class="comparison-value up">12.13%</span>
+                            </div>
+                            <div class="comparison-item">
+                                环比
+                                <span class="comparison-value up">23.23%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 平均房价卡片 -->
+                    <div class="metric-card">
+                        <div class="more-actions" data-modal="message">
+                            <img src="images/更多操作.svg" alt="更多操作">
+                        </div>
+                        <div class="icon-wrapper">
+                            <img src="images/平均房价.svg" alt="平均房价">
+                        </div>
+                        <div class="metric-title">平均房价</div>
+                        <div class="metric-value currency">430.00</div>
+                        <div class="metric-comparison">
+                            <div class="comparison-item">
+                                同比
+                                <span class="comparison-value up">12.13%</span>
+                            </div>
+                            <div class="comparison-item">
+                                环比
+                                <span class="comparison-value up">7.03%</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1531,51 +1759,112 @@
         // 添加问候语时间自适应功能
         function updateGreeting() {
             const hour = new Date().getHours();
-            const greeting = document.querySelector('.greeting');
-            let timeGreeting = '';
+            const greeting = document.querySelector('.main-card .greeting');
+            const name = '苏妈妈';
             
             if (hour >= 5 && hour < 12) {
-                timeGreeting = '早上好';
-            } else if (hour >= 12 && hour < 18) {
-                timeGreeting = '下午好';
+                greeting.textContent = `早上好，${name}`;
+            } else if (hour >= 12 && hour < 14) {
+                greeting.textContent = `中午好，${name}`;
+            } else if (hour >= 14 && hour < 18) {
+                greeting.textContent = `下午好，${name}`;
             } else {
-                timeGreeting = '晚上好';
+                greeting.textContent = `晚上好，${name}`;
             }
-            
-            greeting.textContent = `${timeGreeting}，苏妈妈`;
         }
 
-        // 页面加载时更新问候语
         document.addEventListener('DOMContentLoaded', function() {
+            // 初始更新问候语
             updateGreeting();
+            
+            // 每分钟更新一次问候语
+            setInterval(updateGreeting, 60000);
+            
             // ... existing code ...
         });
 
-        // 更新排名数字和变化值
+        // 格式化数字为千分符形式，保留指定小数位
+        function formatNumber(num, decimals = 0) {
+            return num.toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+        
+        // 生成指定范围内的随机数
+        function getRandomNumber(min, max, decimals = 0) {
+            const random = Math.random() * (max - min) + min;
+            return Number(random.toFixed(decimals));
+        }
+
+        // 更新指标数据
+        function updateMetrics() {
+            // 总营收 (20,000,000 - 40,000,000)
+            const revenue = getRandomNumber(20000000, 40000000);
+            const revenueElement = document.querySelector('.metric-card:nth-child(1) .metric-value');
+            revenueElement.textContent = formatNumber(revenue, 2);
+            
+            // 入住率 (30% - 90%)
+            const occupancy = getRandomNumber(30, 90, 2);
+            const occupancyElement = document.querySelector('.metric-card:nth-child(2) .metric-value');
+            occupancyElement.textContent = formatNumber(occupancy, 2);
+            
+            // 平均房价 (300 - 600)
+            const avgPrice = getRandomNumber(300, 600, 2);
+            const avgPriceElement = document.querySelector('.metric-card:nth-child(3) .metric-value');
+            avgPriceElement.textContent = formatNumber(avgPrice, 2);
+            
+            // 更新同比环比数据
+            const cards = document.querySelectorAll('.metric-card');
+            cards.forEach(card => {
+                const comparisonItems = card.querySelectorAll('.comparison-value');
+                comparisonItems.forEach(item => {
+                    const change = getRandomNumber(-30, 30, 2);
+                    const isUp = change >= 0;
+                    item.innerHTML = `${Math.abs(change).toFixed(2)}%<img src="images/${isUp ? '上升' : '下降'}.svg" alt="${isUp ? '上升' : '下降'}">`;
+                    item.className = `comparison-value ${isUp ? 'up' : 'down'}`;
+                });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始更新数据
+            updateMetrics();
+            
+            // 在日期选择器确认按钮点击时更新数据
+            const dateConfirmBtn = document.querySelector('.btn-confirm');
+            dateConfirmBtn.addEventListener('click', () => {
+                updateMetrics();
+            });
+            
+            // 在快速选择今天时更新数据
+            const quickSelectToday = document.querySelector('.quick-select');
+            quickSelectToday.addEventListener('click', () => {
+                updateMetrics();
+            });
+            
+            // 在时间粒度切换时更新数据
+            const granularityOptions = document.querySelectorAll('.granularity-option:not(.disabled)');
+            granularityOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    updateMetrics();
+                });
+            });
+            
+            // ... existing code ...
+        });
+
+        // 更新排名数据
         function updateRankNumber() {
-            const rankNumber = document.querySelector('.rank-value .number');
-            const changeElement = document.querySelector('.rank-value .change');
+            const rankNumber = document.querySelector('.main-card .rank-value .number');
+            const rankChange = document.querySelector('.main-card .rank-value .change');
             
-            // 生成1-100的随机数作为排名
+            // 生成1-100的随机排名
             const newRank = Math.floor(Math.random() * 100) + 1;
-            // 生成-100到100的随机数作为变化值
-            const change = Math.floor(Math.random() * 201) - 100;
-            
-            // 更新排名数字
             rankNumber.textContent = newRank;
             
-            // 更新变化值和样式
-            const absChange = Math.abs(change);
-            const isIncrease = change >= 0;
-            
-            // 更新HTML结构
-            changeElement.innerHTML = `
-                ${absChange}
-                <img src="images/${isIncrease ? '上升' : '下降'}.svg" alt="${isIncrease ? '上升' : '下降'}">
-            `;
-            
-            // 更新样式类
-            changeElement.className = `change ${isIncrease ? 'up' : 'down'}`;
+            // 生成-10到10的随机排名变化
+            const change = Math.floor(Math.random() * 21) - 10;
+            const isUp = change >= 0;
+            rankChange.innerHTML = `${Math.abs(change)}<img src="images/${isUp ? '上升' : '下降'}.svg" alt="${isUp ? '上升' : '下降'}">`;
+            rankChange.className = `change ${isUp ? 'up' : 'down'}`;
         }
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -1606,6 +1895,17 @@
             });
             
             // ... existing code ...
+        });
+
+        // 为主卡片和指标卡片的更多操作按钮添加点击事件
+        const allMoreActions = document.querySelectorAll('.main-card .more-actions, .metric-card .more-actions');
+        const messageModal = document.getElementById('messageModal');
+        
+        allMoreActions.forEach(action => {
+            action.addEventListener('click', function(e) {
+                e.stopPropagation();
+                messageModal.classList.add('active');
+            });
         });
     </script>
 </body>
