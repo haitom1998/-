@@ -5306,17 +5306,17 @@
         });
     </script>
     <!-- 实时动态模块 -->
-    <div class="realtime-feed-card" style="position:absolute;right:20px;bottom:20px;width:246px;height:397px;background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(17,25,37,0.06);border:1px solid rgba(17,25,37,0.15);display:flex;flex-direction:column;z-index:2;overflow:hidden;">
+    <div class="realtime-feed-card" style="position:absolute;right:20px;top:677px;width:246px;height:403px;background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(17,25,37,0.06);border:1px solid rgba(17,25,37,0.15);display:flex;flex-direction:column;z-index:2;overflow:hidden;">
       <div style="font-size:14px;font-family:PingFangSC-Medium, 'Microsoft YaHei', sans-serif;color:#111925;font-weight:500;padding:16px 0 0 16px;">实时动态</div>
       <div class="realtime-feed-list" style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;position:relative;overflow:hidden;padding:0 0 16px 0;"></div>
     </div>
     <style>
     .realtime-feed-card {
-      /* 右下角定位，和门店详情卡片对齐 */
-      bottom: 20px;
+      /* 与门店详情卡片上下边缘对齐 */
+      top: 677px;
       right: 20px;
       width: 246px;
-      height: 397px;
+      height: 403px;
       border-radius: 12px;
       background: #fff;
       box-shadow: none;
@@ -5337,11 +5337,11 @@
     }
     .realtime-feed-item {
       width: 214px;
-      margin-bottom: 28px;
       background: none;
       box-shadow: none;
       border-radius: 8px;
       padding: 0;
+      margin: 0 0 28px 0; /* 间距改为28px */
       opacity: 1;
       transform: scale(1);
       transition: opacity 0.5s, transform 0.5s;
@@ -5350,6 +5350,7 @@
       display: flex;
       flex-direction: row;
       align-items: center;
+      height: 42px;
     }
     .realtime-feed-item.latest {
       margin-left: 20px;
@@ -5434,20 +5435,24 @@
       }
       function renderFeed() {
         feedList.innerHTML = '';
-        var visible = queue.slice(-5);
-        var baseTop = feedList.offsetHeight || 397;
-        var itemHeight = 28; // 估算每条高度，滚动间距为28px
+        // 渲染最新的4个条目
+        var visible = queue.slice(-4);
+        
         visible.forEach(function(item, i) {
           var div = document.createElement('div');
           div.className = 'realtime-feed-item';
           if (i === visible.length - 1) div.classList.add('latest');
-          // 动态margin和icon间距
+          
+          // 动态margin
           div.style.marginLeft = (i === visible.length - 1 ? 20 : 27) + 'px';
+          
+          // 图标
           var icon = document.createElement('img');
           icon.className = 'feed-icon';
           icon.src = item.action === '用户下单了' ? 'images/下单.svg' : 'images/评价.svg';
           icon.alt = '';
           icon.style.marginRight = (i === visible.length - 1 ? 15 : 22) + 'px';
+          
           // 内容
           var content = document.createElement('div');
           content.className = 'feed-content';
@@ -5464,15 +5469,17 @@
           desc.appendChild(actionSpan);
           content.appendChild(title);
           content.appendChild(desc);
+          
+          // 组装DOM
           div.appendChild(icon);
           div.appendChild(content);
-          // 透明度渐变
-          if (i === 2) div.style.opacity = '0.6';
-          else if (i === 3) div.style.opacity = '0.3';
-          else if (i >= 4) div.style.opacity = '0';
-          else div.style.opacity = '1';
-          // 平滑位移
-          div.style.transform = 'translateY(' + ((i - (visible.length-1)) * itemHeight) + 'px)';
+          
+          // 透明度，第三条和第四条降低不透明度
+          if (i === 0) div.style.opacity = '0.3'; // 第四条(最旧)
+          else if (i === 1) div.style.opacity = '0.6'; // 第三条
+          else div.style.opacity = '1'; // 第一、二条完全不透明
+          
+          // 简单堆叠，不用transform
           feedList.appendChild(div);
         });
       }
