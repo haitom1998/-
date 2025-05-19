@@ -2775,8 +2775,6 @@
         }
 
         function drawTrendChart(data, metric = 'revenue') {
-            console.log('drawTrendChart 入参:', { metric, data });
-            
             const chart = document.getElementById('trendChart');
             const width = chart.clientWidth;
             const height = chart.clientHeight;
@@ -2859,44 +2857,43 @@
             // 根据不同指标设置合适的Y轴最大值和数据处理方式
             let yMax, yMin = 0;
             const maxValue = Math.max(...data.map(d => Math.max(d.brand, d.industry)));
-            console.log('计算得到的最大值:', maxValue);
+            const minValue = Math.min(...data.map(d => Math.min(d.brand, d.industry)));
             
             switch(metric) {
                 case 'revenue':
-                    yMax = Math.ceil(maxValue / 10000) * 10000;
+                    // 总营收Y轴范围设置，最小值略小于数据最小值
+                    yMin = Math.max(0, Math.floor(minValue / 10000 / 50) * 50 * 10000); // 向下取整到最近的50万
+                    yMax = Math.ceil(maxValue / 10000 / 50) * 50 * 10000; // 向上取整到最近的50万
                     break;
                 case 'occupancy':
-                    yMin = 0; // 设置最小值为0%
-                    yMax = 100 * 100000; // 设置最大值为100%
+                    // 入住率Y轴范围设置为20%-90%
+                    yMin = 20;
+                    yMax = 90;
                     break;
                 case 'avgPrice':
-                    yMin = 0; // 设置最小值为0元
-                    yMax = 700 * 10000; // 设置最大值为700元
+                    // 平均房价范围设置，最小值略小于数据最小值
+                    yMin = Math.max(0, Math.floor(minValue / 50) * 50); // 向下取整到最近的50
+                    yMax = Math.ceil(maxValue / 50) * 50; // 向上取整到最近的50
                     break;
                 default:
                     yMax = Math.ceil(maxValue / 10) * 10;
             }
-            console.log('Y轴范围:', { yMin, yMax });
             
             // 格式化Y轴数值
             const formatValue = (value) => {
-                console.log('formatValue 处理:', { value, metric });
-                let result;
                 switch(metric) {
                     case 'revenue':
-                        result = Math.floor(value / 10000) + '万';
-                        break;
+                        // 总营收显示为"xxx万"
+                        return Math.floor(value / 10000) + '万';
                     case 'occupancy':
-                        result = (value / 100000).toFixed(2) + '%';
-                        break;
+                        // 入住率显示为百分比
+                        return value + '%';
                     case 'avgPrice':
-                        result = Math.floor(value / 10000) + '元';
-                        break;
+                        // 平均房价显示为元
+                        return value + '元';
                     default:
-                        result = value;
+                        return value;
                 }
-                console.log('formatValue 结果:', result);
-                return result;
             };
             
             // Y轴
@@ -2924,44 +2921,6 @@
                 text.setAttribute('fill', '#86909C');
                 text.setAttribute('font-size', '12');
                 text.textContent = formatValue(value);
-                svg.appendChild(text);
-            }
-            
-            // X轴
-            const xAxisLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            xAxisLine.setAttribute('x1', padding.left);
-            xAxisLine.setAttribute('x2', width - padding.right);
-            xAxisLine.setAttribute('y1', height - padding.bottom);
-            xAxisLine.setAttribute('y2', height - padding.bottom);
-            xAxisLine.setAttribute('stroke', '#E5E6EB');
-            xAxisLine.setAttribute('stroke-width', '1');
-            svg.appendChild(xAxisLine);
-
-            // X轴刻度和标签
-            const xTicks = Math.min(7, data.length); // 最多显示7个刻度
-            for (let i = 0; i < data.length; i += Math.ceil(data.length / xTicks)) {
-                const x = padding.left + (i * xScale / (data.length - 1));
-                
-                // 添加刻度线
-                const tickLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                tickLine.setAttribute('x1', x);
-                tickLine.setAttribute('x2', x);
-                tickLine.setAttribute('y1', height - padding.bottom);
-                tickLine.setAttribute('y2', height - padding.bottom + 5);
-                tickLine.setAttribute('stroke', '#E5E6EB');
-                tickLine.setAttribute('stroke-width', '1');
-                svg.appendChild(tickLine);
-                
-                // 添加日期标签
-                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                text.setAttribute('x', x);
-                text.setAttribute('y', height - padding.bottom + 20);
-                text.setAttribute('text-anchor', 'middle');
-                text.setAttribute('fill', '#86909C');
-                text.setAttribute('font-size', '12');
-                // 假设data中有date字段，格式为'YYYY-MM-DD'
-                const date = new Date(data[i].date);
-                text.textContent = `${date.getMonth() + 1}/${date.getDate()}`;
                 svg.appendChild(text);
             }
             
@@ -3158,50 +3117,81 @@
 
         // 生成趋势图数据
         function generateTrendData(days = 30, metric = 'revenue') {
-            console.log('generateTrendData 入参:', { days, metric });
             const data = [];
             const today = new Date();
             
             // 根据不同指标生成合适范围的随机数据
             const getRandomValue = (metric) => {
-                let baseValue, minValue, maxValue;
                 switch(metric) {
                     case 'revenue':
-                        // 总营收范围：300-700万
-                        baseValue = 500 * 10000;
-                        minValue = 300 * 10000;
-                        maxValue = 700 * 10000;
-                        return Math.round(minValue + Math.random() * (maxValue - minValue));
+                        // 总营收范围：200-800万，存储为实际数值
+                        return Math.round(200 * 10000 + Math.random() * 600 * 10000);
                     case 'occupancy':
-                        // 入住率范围：60-85%（实际值需要乘以100000）
-                        minValue = 60 * 100000;
-                        maxValue = 85 * 100000;
-                        return Number((minValue + Math.random() * (maxValue - minValue)).toFixed(0));
+                        // 入住率范围：20%-90%
+                        return Math.round(20 + Math.random() * 70);
                     case 'avgPrice':
-                        // 平均房价范围：350-650元（实际值需要乘以10000）
-                        minValue = 350 * 10000;
-                        maxValue = 650 * 10000;
-                        return Math.round(minValue + Math.random() * (maxValue - minValue));
+                        // 平均房价范围：100-600元
+                        return Math.round(100 + Math.random() * 500);
                     default:
                         return Math.floor(Math.random() * 20000) + 10000;
                 }
             };
             
+            // 生成更平滑的数据曲线（加入连续性）
+            let lastBrandValue, lastIndustryValue;
+            
             for (let i = 0; i < days; i++) {
                 const date = new Date(today);
-                date.setDate(date.getDate() - i);
+                date.setDate(date.getDate() - (days - i - 1));
                 
-                const brandValue = getRandomValue(metric);
-                const industryValue = getRandomValue(metric);
+                if (i === 0) {
+                    // 第一个点直接生成
+                    lastBrandValue = getRandomValue(metric);
+                    lastIndustryValue = getRandomValue(metric);
+                } else {
+                    // 后续点在前一个的基础上小幅波动，使曲线更平滑
+                    if (metric === 'revenue') {
+                        // 波动范围为前值的±4%
+                        const fluctRange = 0.04;
+                        const brandFluctuation = (Math.random() * 2 - 1) * fluctRange * lastBrandValue;
+                        const industryFluctuation = (Math.random() * 2 - 1) * fluctRange * lastIndustryValue;
+                        
+                        // 确保在范围内
+                        lastBrandValue = Math.max(200 * 10000, Math.min(800 * 10000, Math.round(lastBrandValue + brandFluctuation)));
+                        lastIndustryValue = Math.max(200 * 10000, Math.min(800 * 10000, Math.round(lastIndustryValue + industryFluctuation)));
+                    } 
+                    else if (metric === 'occupancy') {
+                        // 波动范围±2个百分点
+                        const brandFluctuation = Math.round((Math.random() * 2 - 1) * 4);
+                        const industryFluctuation = Math.round((Math.random() * 2 - 1) * 4);
+                        
+                        // 确保在范围内
+                        lastBrandValue = Math.max(20, Math.min(90, lastBrandValue + brandFluctuation));
+                        lastIndustryValue = Math.max(20, Math.min(90, lastIndustryValue + industryFluctuation));
+                    } 
+                    else if (metric === 'avgPrice') {
+                        // 波动范围±15元
+                        const brandFluctuation = Math.round((Math.random() * 2 - 1) * 30);
+                        const industryFluctuation = Math.round((Math.random() * 2 - 1) * 30);
+                        
+                        // 确保在范围内
+                        lastBrandValue = Math.max(100, Math.min(600, lastBrandValue + brandFluctuation));
+                        lastIndustryValue = Math.max(100, Math.min(600, lastIndustryValue + industryFluctuation));
+                    }
+                    else {
+                        // 其他指标
+                        lastBrandValue = getRandomValue(metric);
+                        lastIndustryValue = getRandomValue(metric);
+                    }
+                }
                 
-                data.unshift({
+                data.push({
                     date: date,
-                    brand: brandValue,
-                    industry: industryValue
+                    brand: lastBrandValue,
+                    industry: lastIndustryValue
                 });
             }
             
-            console.log('generateTrendData 返回数据:', data);
             return data;
         }
 
@@ -4020,86 +4010,85 @@
 
         // 生成趋势图数据
         function generateTrendData(days = 30, metric = 'revenue') {
-            console.log('generateTrendData 入参:', { days, metric });
             const data = [];
             const today = new Date();
             
             // 根据不同指标生成合适范围的随机数据
             const getRandomValue = (metric) => {
-                let baseValue, minValue, maxValue;
                 switch(metric) {
                     case 'revenue':
-                        // 总营收范围：300-700万
-                        baseValue = 500 * 10000;
-                        minValue = 300 * 10000;
-                        maxValue = 700 * 10000;
-                        return Math.round(minValue + Math.random() * (maxValue - minValue));
+                        // 总营收范围：200-800万，存储为实际数值
+                        return Math.round(200 * 10000 + Math.random() * 600 * 10000);
                     case 'occupancy':
-                        // 入住率范围：60-85%（实际值需要乘以100000）
-                        minValue = 60 * 100000;
-                        maxValue = 85 * 100000;
-                        return Number((minValue + Math.random() * (maxValue - minValue)).toFixed(0));
+                        // 入住率范围：20%-90%
+                        return Math.round(20 + Math.random() * 70);
                     case 'avgPrice':
-                        // 平均房价范围：350-650元（实际值需要乘以10000）
-                        minValue = 350 * 10000;
-                        maxValue = 650 * 10000;
-                        return Math.round(minValue + Math.random() * (maxValue - minValue));
+                        // 平均房价范围：100-600元
+                        return Math.round(100 + Math.random() * 500);
                     default:
                         return Math.floor(Math.random() * 20000) + 10000;
                 }
             };
             
+            // 生成更平滑的数据曲线（加入连续性）
+            let lastBrandValue, lastIndustryValue;
+            
             for (let i = 0; i < days; i++) {
                 const date = new Date(today);
-                date.setDate(date.getDate() - i);
+                date.setDate(date.getDate() - (days - i - 1));
                 
-                const brandValue = getRandomValue(metric);
-                const industryValue = getRandomValue(metric);
+                if (i === 0) {
+                    // 第一个点直接生成
+                    lastBrandValue = getRandomValue(metric);
+                    lastIndustryValue = getRandomValue(metric);
+                } else {
+                    // 后续点在前一个的基础上小幅波动，使曲线更平滑
+                    if (metric === 'revenue') {
+                        // 波动范围为前值的±4%
+                        const fluctRange = 0.04;
+                        const brandFluctuation = (Math.random() * 2 - 1) * fluctRange * lastBrandValue;
+                        const industryFluctuation = (Math.random() * 2 - 1) * fluctRange * lastIndustryValue;
+                        
+                        // 确保在范围内
+                        lastBrandValue = Math.max(200 * 10000, Math.min(800 * 10000, Math.round(lastBrandValue + brandFluctuation)));
+                        lastIndustryValue = Math.max(200 * 10000, Math.min(800 * 10000, Math.round(lastIndustryValue + industryFluctuation)));
+                    } 
+                    else if (metric === 'occupancy') {
+                        // 波动范围±2个百分点
+                        const brandFluctuation = Math.round((Math.random() * 2 - 1) * 4);
+                        const industryFluctuation = Math.round((Math.random() * 2 - 1) * 4);
+                        
+                        // 确保在范围内
+                        lastBrandValue = Math.max(20, Math.min(90, lastBrandValue + brandFluctuation));
+                        lastIndustryValue = Math.max(20, Math.min(90, lastIndustryValue + industryFluctuation));
+                    } 
+                    else if (metric === 'avgPrice') {
+                        // 波动范围±15元
+                        const brandFluctuation = Math.round((Math.random() * 2 - 1) * 30);
+                        const industryFluctuation = Math.round((Math.random() * 2 - 1) * 30);
+                        
+                        // 确保在范围内
+                        lastBrandValue = Math.max(100, Math.min(600, lastBrandValue + brandFluctuation));
+                        lastIndustryValue = Math.max(100, Math.min(600, lastIndustryValue + industryFluctuation));
+                    }
+                    else {
+                        // 其他指标
+                        lastBrandValue = getRandomValue(metric);
+                        lastIndustryValue = getRandomValue(metric);
+                    }
+                }
                 
-                data.unshift({
+                data.push({
                     date: date,
-                    brand: brandValue,
-                    industry: industryValue
+                    brand: lastBrandValue,
+                    industry: lastIndustryValue
                 });
             }
             
-            console.log('generateTrendData 返回数据:', data);
             return data;
         }
 
-        // 绘制趋势图
-        function drawTrendChart(data, metric = 'revenue') {
-            console.log('drawTrendChart 入参:', { metric, data });
-            
-            const chart = document.getElementById('trendChart');
-            const width = chart.clientWidth;
-            const height = chart.clientHeight;
-            const padding = { top: 20, right: 20, bottom: 30, left: 60 };
-            
-            // 清空现有内容
-            chart.innerHTML = '';
-            
-            // 创建SVG
-            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-            svg.setAttribute('width', width);
-            svg.setAttribute('height', height);
-            chart.appendChild(svg);
-
-            // 判断是否显示节假日
-            const showHolidays = !document.querySelector('.trend-toggle-switch').classList.contains('off');
-            
-            // 节假日数据（示例）
-            const holidays = [
-                { date: '2023-10-01', name: '国庆节' },
-                { date: '2023-10-02', name: '国庆节' },
-                { date: '2023-10-03', name: '国庆节' },
-                { date: '2023-10-04', name: '国庆节' },
-                { date: '2023-10-05', name: '国庆节' },
-                { date: '2023-10-06', name: '国庆节' },
-                { date: '2023-10-07', name: '国庆节' },
-                { date: '2023-09-29', name: '中秋节' },
-                { date: '2023-09-30', name: '中秋节' }
-            ];
+        // 使用前面定义的drawTrendChart和generateTrendData函数
             
             // 添加tooltip容器
             const tooltip = document.createElement('div');
@@ -4153,44 +4142,42 @@
             // 根据不同指标设置合适的Y轴最大值和数据处理方式
             let yMax, yMin = 0;
             const maxValue = Math.max(...data.map(d => Math.max(d.brand, d.industry)));
-            console.log('计算得到的最大值:', maxValue);
             
             switch(metric) {
                 case 'revenue':
-                    yMax = Math.ceil(maxValue / 10000) * 10000;
+                    // 总营收Y轴范围设置，最小值略小于数据最小值
+                    yMin = Math.max(0, Math.floor(minValue / 10000 / 50) * 50 * 10000); // 向下取整到最近的50万
+                    yMax = Math.ceil(maxValue / 10000 / 50) * 50 * 10000; // 向上取整到最近的50万
                     break;
                 case 'occupancy':
-                    yMin = 0; // 设置最小值为0%
-                    yMax = 100 * 100000; // 设置最大值为100%
+                    // 入住率Y轴范围设置为20%-90%
+                    yMin = 20;
+                    yMax = 90;
                     break;
                 case 'avgPrice':
-                    yMin = 0; // 设置最小值为0元
-                    yMax = 700 * 10000; // 设置最大值为700元
+                    // 平均房价范围设置，最小值略小于数据最小值
+                    yMin = Math.max(0, Math.floor(minValue / 50) * 50); // 向下取整到最近的50
+                    yMax = Math.ceil(maxValue / 50) * 50; // 向上取整到最近的50
                     break;
                 default:
                     yMax = Math.ceil(maxValue / 10) * 10;
             }
-            console.log('Y轴范围:', { yMin, yMax });
             
             // 格式化Y轴数值
             const formatValue = (value) => {
-                console.log('formatValue 处理:', { value, metric });
-                let result;
                 switch(metric) {
                     case 'revenue':
-                        result = Math.floor(value / 10000) + '万';
-                        break;
+                        // 总营收显示为"xxx万"
+                        return Math.floor(value / 10000) + '万';
                     case 'occupancy':
-                        result = (value / 100000).toFixed(2) + '%';
-                        break;
+                        // 入住率显示为百分比
+                        return value + '%';
                     case 'avgPrice':
-                        result = Math.floor(value / 10000) + '元';
-                        break;
+                        // 平均房价显示为元
+                        return value + '元';
                     default:
-                        result = value;
+                        return value;
                 }
-                console.log('formatValue 结果:', result);
-                return result;
             };
             
             // Y轴
@@ -4218,44 +4205,6 @@
                 text.setAttribute('fill', '#86909C');
                 text.setAttribute('font-size', '12');
                 text.textContent = formatValue(value);
-                svg.appendChild(text);
-            }
-            
-            // X轴
-            const xAxisLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            xAxisLine.setAttribute('x1', padding.left);
-            xAxisLine.setAttribute('x2', width - padding.right);
-            xAxisLine.setAttribute('y1', height - padding.bottom);
-            xAxisLine.setAttribute('y2', height - padding.bottom);
-            xAxisLine.setAttribute('stroke', '#E5E6EB');
-            xAxisLine.setAttribute('stroke-width', '1');
-            svg.appendChild(xAxisLine);
-
-            // X轴刻度和标签
-            const xTicks = Math.min(7, data.length); // 最多显示7个刻度
-            for (let i = 0; i < data.length; i += Math.ceil(data.length / xTicks)) {
-                const x = padding.left + (i * xScale / (data.length - 1));
-                
-                // 添加刻度线
-                const tickLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                tickLine.setAttribute('x1', x);
-                tickLine.setAttribute('x2', x);
-                tickLine.setAttribute('y1', height - padding.bottom);
-                tickLine.setAttribute('y2', height - padding.bottom + 5);
-                tickLine.setAttribute('stroke', '#E5E6EB');
-                tickLine.setAttribute('stroke-width', '1');
-                svg.appendChild(tickLine);
-                
-                // 添加日期标签
-                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                text.setAttribute('x', x);
-                text.setAttribute('y', height - padding.bottom + 20);
-                text.setAttribute('text-anchor', 'middle');
-                text.setAttribute('fill', '#86909C');
-                text.setAttribute('font-size', '12');
-                // 假设data中有date字段，格式为'YYYY-MM-DD'
-                const date = new Date(data[i].date);
-                text.textContent = `${date.getMonth() + 1}/${date.getDate()}`;
                 svg.appendChild(text);
             }
             
