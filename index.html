@@ -1246,6 +1246,8 @@
             padding: 0;
             display: flex;
             flex-direction: column;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: left, right;
         }
 
         .trend-header {
@@ -1387,6 +1389,16 @@
             position: relative;
             z-index: 1;
             min-height: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: width, transform;
+        }
+
+        .trend-chart svg {
+            display: block;
+            width: 100%;
+            height: 100%;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: width, transform;
         }
 
         .trend-legend {
@@ -1421,16 +1433,20 @@
 
         .trend-slider {
             height: 24px;
+            margin: 12px 20px 8px;
             position: relative;
-            padding: 0 8px;
+            user-select: none;
         }
 
         .trend-slider .track {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
             height: 4px;
-            background: #F2F3F5;
+            background: #E5E6EB;
             border-radius: 2px;
-            position: relative;
-            margin-top: 10px;
+            transform: translateY(-50%);
         }
 
         .trend-slider .range {
@@ -1438,40 +1454,41 @@
             height: 100%;
             background: #FFD100;
             border-radius: 2px;
+            left: 30%;
+            right: 30%;
         }
 
         .trend-slider .handle {
-            width: 16px;
-            height: 16px;
+            position: absolute;
+            width: 12px;
+            height: 12px;
             background: white;
             border: 2px solid #FFD100;
             border-radius: 50%;
-            position: absolute;
             top: 50%;
             transform: translate(-50%, -50%);
             cursor: pointer;
-            z-index: 1;
+            transition: border-width 0.2s ease;
         }
 
         .trend-slider .handle:hover {
-            transform: translate(-50%, -50%) scale(1.1);
+            border-width: 3px;
         }
 
         .trend-slider .handle.left {
-            left: 0;
+            left: 30%;
         }
 
         .trend-slider .handle.right {
-            right: 0;
+            left: 70%;
         }
 
         .trend-time-labels {
             display: flex;
             justify-content: space-between;
-            margin-top: 4px;
-            padding: 0 8px;
-            font-size: 12px;
+            margin: 0 20px 16px;
             color: #86909C;
+            font-size: 12px;
         }
 
         @font-face {
@@ -2782,15 +2799,25 @@
             const height = chart.clientHeight;
             const padding = { top: 20, right: 20, bottom: 30, left: 60 };
             
-            // 清空现有内容
-            chart.innerHTML = '';
+            // 保存现有的SVG元素
+            let svg = chart.querySelector('svg');
+            if (!svg) {
+                svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                chart.appendChild(svg);
+            }
             
-            // 创建SVG
-            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            // 使用CSS过渡更新SVG尺寸
+            svg.style.transition = 'width 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+            svg.style.width = width + 'px';
+            svg.style.height = height + 'px';
             svg.setAttribute('width', width);
             svg.setAttribute('height', height);
-            chart.appendChild(svg);
-
+            
+            // 清空现有内容，但保留SVG元素本身
+            while (svg.firstChild) {
+                svg.removeChild(svg.firstChild);
+            }
+            
             // 判断是否显示节假日
             const showHolidays = !document.querySelector('.trend-toggle-switch').classList.contains('off');
             
@@ -3226,6 +3253,13 @@
         // 添加收起/展开功能 - 通过切换collapsed类来触发过渡动画
         collapseBtn.addEventListener('click', () => {
             sidebar.classList.toggle('collapsed');
+            
+            // 使用setTimeout等待侧导动画完成后重绘趋势图
+            setTimeout(() => {
+                const selectedMetric = document.querySelector('.trend-option.selected')?.dataset.metric || 'revenue';
+                const trendData = generateTrendData();
+                drawTrendChart(trendData, selectedMetric);
+            }, 300); // 300ms是侧导的过渡动画时间
         });
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -5406,22 +5440,127 @@
             });
           }
         });
+
+        // 初始化缩略轴
+        function initializeSlider() {
+            const slider = document.querySelector('.trend-slider');
+            const track = slider.querySelector('.track');
+            const range = slider.querySelector('.range');
+            const leftHandle = slider.querySelector('.handle.left');
+            const rightHandle = slider.querySelector('.handle.right');
+            const timeLabels = document.querySelectorAll('.trend-time-labels span');
+            
+            let isDragging = false;
+            let currentHandle = null;
+            let startX = 0;
+            let startLeft = 0;
+            
+            // 更新时间标签
+            function updateTimeLabels(leftPercent, rightPercent) {
+                const startDate = new Date('2023-09-18');
+                const endDate = new Date('2023-10-08');
+                const totalDays = (endDate - startDate) / (1000 * 60 * 60 * 24);
+                
+                const leftDate = new Date(startDate.getTime() + (totalDays * leftPercent / 100) * 24 * 60 * 60 * 1000);
+                const rightDate = new Date(startDate.getTime() + (totalDays * rightPercent / 100) * 24 * 60 * 60 * 1000);
+                
+                timeLabels[0].textContent = leftDate.toISOString().split('T')[0];
+                timeLabels[1].textContent = rightDate.toISOString().split('T')[0];
+            }
+            
+            // 更新范围条
+            function updateRange() {
+                const leftPercent = parseFloat(leftHandle.style.left) || 30;
+                const rightPercent = parseFloat(rightHandle.style.left) || 70;
+                
+                range.style.left = leftPercent + '%';
+                range.style.right = (100 - rightPercent) + '%';
+                
+                updateTimeLabels(leftPercent, rightPercent);
+                
+                // 触发趋势图更新
+                const selectedMetric = document.querySelector('.trend-option.selected').dataset.metric;
+                const trendData = generateTrendData();
+                drawTrendChart(trendData, selectedMetric);
+            }
+            
+            // 处理拖拽开始
+            function handleDragStart(e, handle) {
+                e.preventDefault();
+                isDragging = true;
+                currentHandle = handle;
+                startX = e.clientX || e.touches[0].clientX;
+                startLeft = parseFloat(handle.style.left) || (handle.classList.contains('left') ? 30 : 70);
+                
+                document.addEventListener('mousemove', handleDragMove);
+                document.addEventListener('mouseup', handleDragEnd);
+                document.addEventListener('touchmove', handleDragMove);
+                document.addEventListener('touchend', handleDragEnd);
+            }
+            
+            // 处理拖拽移动
+            function handleDragMove(e) {
+                if (!isDragging) return;
+                
+                const clientX = e.clientX || e.touches[0].clientX;
+                const deltaX = clientX - startX;
+                const trackRect = track.getBoundingClientRect();
+                const newLeft = startLeft + (deltaX / trackRect.width * 100);
+                
+                // 限制范围
+                let limitedLeft = Math.max(0, Math.min(100, newLeft));
+                if (currentHandle.classList.contains('left')) {
+                    limitedLeft = Math.min(limitedLeft, parseFloat(rightHandle.style.left) - 10 || 60);
+                } else {
+                    limitedLeft = Math.max(limitedLeft, parseFloat(leftHandle.style.left) + 10 || 40);
+                }
+                
+                currentHandle.style.left = limitedLeft + '%';
+                updateRange();
+            }
+            
+            // 处理拖拽结束
+            function handleDragEnd() {
+                isDragging = false;
+                document.removeEventListener('mousemove', handleDragMove);
+                document.removeEventListener('mouseup', handleDragEnd);
+                document.removeEventListener('touchmove', handleDragMove);
+                document.removeEventListener('touchend', handleDragEnd);
+            }
+            
+            // 绑定事件监听
+            leftHandle.addEventListener('mousedown', e => handleDragStart(e, leftHandle));
+            rightHandle.addEventListener('mousedown', e => handleDragStart(e, rightHandle));
+            leftHandle.addEventListener('touchstart', e => handleDragStart(e, leftHandle));
+            rightHandle.addEventListener('touchstart', e => handleDragStart(e, rightHandle));
+            
+            // 初始化范围条
+            updateRange();
+        }
+
+        // 在DOM加载完成后初始化缩略轴
+        document.addEventListener('DOMContentLoaded', function() {
+            // ... existing code ...
+            
+            // 初始化缩略轴
+            initializeSlider();
+        });
     </script>
     <!-- 实时动态模块 -->
-    <div class="realtime-feed-card" style="position:absolute;right:20px;top:677px;width:246px;height:403px;background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(17,25,37,0.06);border:1px solid rgba(17,25,37,0.15);display:flex;flex-direction:column;z-index:2;overflow:hidden;">
+    <div class="realtime-feed-card">
       <div style="font-size:14px;font-family:PingFangSC-Medium, 'Microsoft YaHei', sans-serif;color:#111925;font-weight:500;padding:16px 0 0 16px;">实时动态</div>
-      <div class="realtime-feed-list" style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;position:relative;overflow:hidden;padding:0 0 16px 0;"></div>
+      <div class="realtime-feed-list"></div>
     </div>
     <style>
     .realtime-feed-card {
-      /* 与门店详情卡片上下边缘对齐 */
+      position: absolute;
       top: 677px;
       right: 20px;
       width: 246px;
       height: 403px;
       border-radius: 12px;
       background: #fff;
-      box-shadow: none;
+      box-shadow: 0 2px 8px rgba(17,25,37,0.06);
       border: 1px solid rgba(17,25,37,0.15);
       display: flex;
       flex-direction: column;
@@ -5443,10 +5582,10 @@
       box-shadow: none;
       border-radius: 8px;
       padding: 0;
-      margin: 0 0 28px 0; /* 间距改为28px */
-      opacity: 1;
-      transform: scale(1);
-      transition: opacity 0.5s, transform 0.5s;
+      margin: 0 0 28px 0;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.5s ease-out;
       position: relative;
       will-change: opacity, transform;
       display: flex;
@@ -5491,130 +5630,125 @@
       margin-bottom: 6px;
     }
     .realtime-feed-item .feed-desc {
-      display: flex;
-      align-items: center;
-      gap: 4px;
       font-size: 12px;
-      font-family: PingFangSC-Regular, 'Microsoft YaHei', sans-serif;
-      font-weight: 400;
-      color: #111925;
-    }
-    .realtime-feed-item-leave {
-      opacity: 0;
-      transform: scale(0.95);
-      transition: opacity 0.5s, transform 0.5s;
-    }
-    .realtime-feed-item-enter {
-      opacity: 0;
-      transform: scale(1.08);
-      animation: feedEnter 0.5s cubic-bezier(0.4,0,0.2,1) forwards;
-    }
-    @keyframes feedEnter {
-      0% { opacity: 0; transform: scale(1.08); }
-      100% { opacity: 1; transform: scale(1); }
+      color: #86909C;
+      display: flex;
+      gap: 8px;
     }
     </style>
     <script>
-    (function(){
-      // 获取酒店名称列表
-      var hotelNames = [];
-      fetch('hotels.json').then(res => res.json()).then(list => {
-        hotelNames = list.map(h => h.name);
-      });
-      // 动态内容类型
-      var actions = ['用户下单了', '用户评价了'];
-      var feedList = document.querySelector('.realtime-feed-list');
-      var maxItems = 5;
-      var queue = [];
-      var idx = 0;
-      function getHotelName() {
-        if (hotelNames.length === 0) return '酒店名称';
-        return hotelNames[Math.floor(Math.random() * hotelNames.length)];
-      }
-      function getNowTime() {
-        var d = new Date();
-        return d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0') + ':' + d.getSeconds().toString().padStart(2, '0');
-      }
-      function renderFeed() {
-        feedList.innerHTML = '';
-        // 渲染最新的4个条目
-        var visible = queue.slice(-4);
-        
-        visible.forEach(function(item, i) {
-          var div = document.createElement('div');
-          div.className = 'realtime-feed-item';
-          if (i === visible.length - 1) div.classList.add('latest');
-          
-          // 动态margin
-          div.style.marginLeft = (i === visible.length - 1 ? 20 : 27) + 'px';
+    // 实时动态相关代码
+         document.addEventListener('DOMContentLoaded', async function() {
+       const feedList = document.querySelector('.realtime-feed-list');
+       const queue = [];
+       let hotels = [];
+       const actions = ['用户下单了', '发表了评价'];
+       
+       // 获取酒店列表
+       try {
+         const response = await fetch('hotels.json');
+         hotels = await response.json();
+       } catch (error) {
+         console.error('加载酒店列表失败:', error);
+         hotels = [
+           {name: '以卡里大酒店望京店'},
+           {name: '以卡里大酒店三里屯店'},
+           {name: '以卡里大酒店五道口店'}
+         ];
+       }
+       
+              function formatTime(date) {
+         const hours = date.getHours().toString().padStart(2, '0');
+         const minutes = date.getMinutes().toString().padStart(2, '0');
+         return `${hours}:${minutes}`;
+       }
+       
+       function generateFeedItem() {
+         return {
+           hotelName: hotels[Math.floor(Math.random() * hotels.length)].name,
+           action: actions[Math.floor(Math.random() * actions.length)],
+           time: new Date()
+         };
+       }
+       
+       function renderFeed() {
+         feedList.innerHTML = '';
+         // 渲染最新的4个条目
+         const visible = queue.slice(-4);
+         
+         visible.forEach(function(item, i) {
+           const div = document.createElement('div');
+           div.className = 'realtime-feed-item';
+           if (i === visible.length - 1) div.classList.add('latest');
+           
+           // 设置初始位置和样式
+           div.style.marginLeft = (i === visible.length - 1 ? 20 : 27) + 'px';
+           
+           // 添加到DOM
+           feedList.appendChild(div);
+           
+           // 触发重排并应用动画
+           setTimeout(() => {
+             div.style.transform = 'translateY(0)';
+             div.style.opacity = i === 0 ? '0.3' : i === 1 ? '0.6' : '1';
+           }, 50);
           
           // 图标
-          var icon = document.createElement('img');
+          const icon = document.createElement('img');
           icon.className = 'feed-icon';
           icon.src = item.action === '用户下单了' ? 'images/下单.svg' : 'images/评价.svg';
           icon.alt = '';
           icon.style.marginRight = (i === visible.length - 1 ? 15 : 22) + 'px';
           
           // 内容
-          var content = document.createElement('div');
+          const content = document.createElement('div');
           content.className = 'feed-content';
-          var title = document.createElement('div');
+          const title = document.createElement('div');
           title.className = 'feed-title';
           title.textContent = item.hotelName;
-          var desc = document.createElement('div');
-          desc.className = 'feed-desc';
-          var timeSpan = document.createElement('span');
-          timeSpan.textContent = item.time;
-          var actionSpan = document.createElement('span');
-          actionSpan.textContent = item.action;
-          desc.appendChild(timeSpan);
-          desc.appendChild(actionSpan);
-          content.appendChild(title);
-          content.appendChild(desc);
-          
-          // 组装DOM
-          div.appendChild(icon);
-          div.appendChild(content);
-          
-          // 透明度，第三条和第四条降低不透明度
-          if (i === 0) div.style.opacity = '0.3'; // 第四条(最旧)
-          else if (i === 1) div.style.opacity = '0.6'; // 第三条
-          else div.style.opacity = '1'; // 第一、二条完全不透明
-          
-          // 简单堆叠，不用transform
-          feedList.appendChild(div);
+                     const desc = document.createElement('div');
+           desc.className = 'feed-desc';
+           const timeSpan = document.createElement('span');
+           timeSpan.textContent = formatTime(item.time);
+           const actionSpan = document.createElement('span');
+           actionSpan.textContent = item.action;
+           desc.appendChild(timeSpan);
+           desc.appendChild(actionSpan);
+           content.appendChild(title);
+           content.appendChild(desc);
+           
+           // 组装DOM
+           div.appendChild(icon);
+           div.appendChild(content);
+           
+           // 添加到DOM
+           feedList.appendChild(div);
+           
+           // 触发重排以应用初始状态
+           div.offsetHeight;
+           
+           // 应用动画
+           requestAnimationFrame(() => {
+             div.style.transition = 'all 0.5s ease-out';
+             div.style.transform = 'translateY(0)';
+             div.style.opacity = i === 0 ? '0.3' : i === 1 ? '0.6' : '1';
+           });
         });
       }
-      function nextFeed() {
-        if (queue.length >= maxItems) {
-          queue[0].leave = true;
-        }
-        // 新增一条
-        queue.push({
-          hotelName: getHotelName(),
-          time: getNowTime(),
-          action: actions[Math.floor(Math.random()*actions.length)],
-          enter: true
-        });
-        renderFeed();
-        if (queue.length > maxItems) {
-          setTimeout(function(){
-            queue.shift();
-            renderFeed();
-          }, 500);
-        }
-      }
-      // 初始填充
-      for (var i = 0; i < 2; i++) {
-        queue.push({
-          hotelName: getHotelName(),
-          time: getNowTime(),
-          action: actions[Math.floor(Math.random()*actions.length)]
-        });
+      
+      // 初始化4条数据
+      for (let i = 0; i < 4; i++) {
+        queue.push(generateFeedItem());
       }
       renderFeed();
-      setInterval(nextFeed, 5000);
-    })();
+      
+      // 每隔5-10秒添加一条新数据
+      setInterval(function() {
+        queue.push(generateFeedItem());
+        if (queue.length > 10) queue.shift(); // 保持队列长度不超过10
+        renderFeed();
+      }, Math.random() * 5000 + 5000);
+    });
     </script>
-</body>
-</html> 
+    </body>
+    </html> 
