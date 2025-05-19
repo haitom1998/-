@@ -2135,6 +2135,38 @@
 .promotion-item-budget {
     color: #86909C;
 }
+
+/* 门店详情右上角更多操作按钮hover高亮 */
+.store-list-card .more-actions {
+  position: relative;
+}
+.store-list-card .more-actions::before {
+  content: '';
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: transparent;
+  transition: background-color 0.3s ease;
+  z-index: -1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.store-list-card .more-actions:hover::before {
+  background-color: rgba(17, 25, 37, 0.1);
+}
+
+.store-list-card .more-actions {
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  position: relative !important;
+}
     </style>
 </head>
 <body>
@@ -2415,7 +2447,12 @@
                 </div>
                 <!-- 门店列表卡片，插入在此处 -->
     <div class="store-list-card" style="position:absolute; left:338px; top:677px; right:282px; height:403px; background:#fff; border-radius:12px; border:1px solid rgba(17,25,37,0.15); box-sizing:border-box; padding:0; display:flex; flex-direction:column;">
-      <div style="font-size:14px;font-family:PingFangSC-Medium, 'Microsoft YaHei', sans-serif; color:#111925; font-weight:500; padding:16px 12px 0 12px; margin-bottom:0;">门店详情</div>
+      <div style="font-size:14px;font-family:PingFangSC-Medium, 'Microsoft YaHei', sans-serif; color:#111925; font-weight:500; padding:16px 12px 0 12px; margin-bottom:0;display:flex;align-items:center;justify-content:space-between;">
+        <span>门店详情</span>
+        <div class="more-actions" style="width:16px;height:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;" id="storeListMoreActions">
+          <img src="images/更多操作.svg" alt="更多操作" style="width:16px;height:16px;">
+        </div>
+      </div>
       <div style="margin-top:16px; padding:0 12px; width:auto;">
         <div style="display:flex;align-items:center;background:#F7F8FA;border-radius:6px;height:29px;font-size:12px;color:rgba(17,25,37,0.65);font-family:PingFangSC-Medium, 'Microsoft YaHei', sans-serif;font-weight:500;">
           <div style="width:220px;min-width:220px;max-width:220px;display:flex;align-items:center;padding-left:12px;">
@@ -5256,6 +5293,219 @@
             listContainer.appendChild(row);
           });
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+          var storeListMoreActions = document.getElementById('storeListMoreActions');
+          var messageModal = document.getElementById('messageModal');
+          if (storeListMoreActions && messageModal) {
+            storeListMoreActions.addEventListener('click', function(e) {
+              e.stopPropagation();
+              messageModal.classList.add('active');
+            });
+          }
+        });
+    </script>
+    <!-- 实时动态模块 -->
+    <div class="realtime-feed-card" style="position:absolute;right:20px;bottom:20px;width:246px;height:397px;background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(17,25,37,0.06);border:1px solid rgba(17,25,37,0.15);display:flex;flex-direction:column;z-index:2;overflow:hidden;">
+      <div style="font-size:14px;font-family:PingFangSC-Medium, 'Microsoft YaHei', sans-serif;color:#111925;font-weight:500;padding:16px 0 0 16px;">实时动态</div>
+      <div class="realtime-feed-list" style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;position:relative;overflow:hidden;padding:0 0 16px 0;"></div>
+    </div>
+    <style>
+    .realtime-feed-card {
+      /* 右下角定位，和门店详情卡片对齐 */
+      bottom: 20px;
+      right: 20px;
+      width: 246px;
+      height: 397px;
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: none;
+      border: 1px solid rgba(17,25,37,0.15);
+      display: flex;
+      flex-direction: column;
+      z-index: 2;
+      overflow: hidden;
+    }
+    .realtime-feed-list {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      position: relative;
+      overflow: hidden;
+      padding: 0 0 16px 0;
+    }
+    .realtime-feed-item {
+      width: 214px;
+      margin-bottom: 28px;
+      background: none;
+      box-shadow: none;
+      border-radius: 8px;
+      padding: 0;
+      opacity: 1;
+      transform: scale(1);
+      transition: opacity 0.5s, transform 0.5s;
+      position: relative;
+      will-change: opacity, transform;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+    .realtime-feed-item.latest {
+      margin-left: 20px;
+    }
+    .realtime-feed-item:not(.latest) {
+      margin-left: 27px;
+    }
+    .realtime-feed-item .feed-icon {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      transition: width 0.5s, height 0.5s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+    }
+    .realtime-feed-item.latest .feed-icon {
+      width: 42px;
+      height: 42px;
+    }
+    .realtime-feed-item:not(.latest) .feed-icon {
+      margin-right: 22px;
+    }
+    .realtime-feed-item .feed-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+    .realtime-feed-item .feed-title {
+      font-size: 14px;
+      font-family: PingFangSC-Medium, 'Microsoft YaHei', sans-serif;
+      font-weight: 500;
+      color: #111925;
+      margin-bottom: 6px;
+    }
+    .realtime-feed-item .feed-desc {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      font-family: PingFangSC-Regular, 'Microsoft YaHei', sans-serif;
+      font-weight: 400;
+      color: #111925;
+    }
+    .realtime-feed-item-leave {
+      opacity: 0;
+      transform: scale(0.95);
+      transition: opacity 0.5s, transform 0.5s;
+    }
+    .realtime-feed-item-enter {
+      opacity: 0;
+      transform: scale(1.08);
+      animation: feedEnter 0.5s cubic-bezier(0.4,0,0.2,1) forwards;
+    }
+    @keyframes feedEnter {
+      0% { opacity: 0; transform: scale(1.08); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    </style>
+    <script>
+    (function(){
+      // 获取酒店名称列表
+      var hotelNames = [];
+      fetch('hotels.json').then(res => res.json()).then(list => {
+        hotelNames = list.map(h => h.name);
+      });
+      // 动态内容类型
+      var actions = ['用户下单了', '用户评价了'];
+      var feedList = document.querySelector('.realtime-feed-list');
+      var maxItems = 5;
+      var queue = [];
+      var idx = 0;
+      function getHotelName() {
+        if (hotelNames.length === 0) return '酒店名称';
+        return hotelNames[Math.floor(Math.random() * hotelNames.length)];
+      }
+      function getNowTime() {
+        var d = new Date();
+        return d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0') + ':' + d.getSeconds().toString().padStart(2, '0');
+      }
+      function renderFeed() {
+        feedList.innerHTML = '';
+        var visible = queue.slice(-5);
+        var baseTop = feedList.offsetHeight || 397;
+        var itemHeight = 28; // 估算每条高度，滚动间距为28px
+        visible.forEach(function(item, i) {
+          var div = document.createElement('div');
+          div.className = 'realtime-feed-item';
+          if (i === visible.length - 1) div.classList.add('latest');
+          // 动态margin和icon间距
+          div.style.marginLeft = (i === visible.length - 1 ? 20 : 27) + 'px';
+          var icon = document.createElement('img');
+          icon.className = 'feed-icon';
+          icon.src = item.action === '用户下单了' ? 'images/下单.svg' : 'images/评价.svg';
+          icon.alt = '';
+          icon.style.marginRight = (i === visible.length - 1 ? 15 : 22) + 'px';
+          // 内容
+          var content = document.createElement('div');
+          content.className = 'feed-content';
+          var title = document.createElement('div');
+          title.className = 'feed-title';
+          title.textContent = item.hotelName;
+          var desc = document.createElement('div');
+          desc.className = 'feed-desc';
+          var timeSpan = document.createElement('span');
+          timeSpan.textContent = item.time;
+          var actionSpan = document.createElement('span');
+          actionSpan.textContent = item.action;
+          desc.appendChild(timeSpan);
+          desc.appendChild(actionSpan);
+          content.appendChild(title);
+          content.appendChild(desc);
+          div.appendChild(icon);
+          div.appendChild(content);
+          // 透明度渐变
+          if (i === 2) div.style.opacity = '0.6';
+          else if (i === 3) div.style.opacity = '0.3';
+          else if (i >= 4) div.style.opacity = '0';
+          else div.style.opacity = '1';
+          // 平滑位移
+          div.style.transform = 'translateY(' + ((i - (visible.length-1)) * itemHeight) + 'px)';
+          feedList.appendChild(div);
+        });
+      }
+      function nextFeed() {
+        if (queue.length >= maxItems) {
+          queue[0].leave = true;
+        }
+        // 新增一条
+        queue.push({
+          hotelName: getHotelName(),
+          time: getNowTime(),
+          action: actions[Math.floor(Math.random()*actions.length)],
+          enter: true
+        });
+        renderFeed();
+        if (queue.length > maxItems) {
+          setTimeout(function(){
+            queue.shift();
+            renderFeed();
+          }, 500);
+        }
+      }
+      // 初始填充
+      for (var i = 0; i < 2; i++) {
+        queue.push({
+          hotelName: getHotelName(),
+          time: getNowTime(),
+          action: actions[Math.floor(Math.random()*actions.length)]
+        });
+      }
+      renderFeed();
+      setInterval(nextFeed, 5000);
+    })();
     </script>
 </body>
 </html> 
