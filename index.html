@@ -2413,6 +2413,63 @@
                         </div>
                     </div>
                 </div>
+                <!-- 门店列表卡片，插入在此处 -->
+    <div class="store-list-card" style="position:absolute; left:338px; top:677px; right:282px; height:403px; background:#fff; border-radius:12px; border:1px solid rgba(17,25,37,0.15); box-sizing:border-box; padding:0; display:flex; flex-direction:column;">
+      <div style="font-size:14px;font-family:PingFangSC-Medium, 'Microsoft YaHei', sans-serif; color:#111925; font-weight:500; padding:16px 12px 0 12px; margin-bottom:0;">门店详情</div>
+      <div style="margin-top:16px; padding:0 12px; width:auto;">
+        <div style="display:flex;align-items:center;background:#F7F8FA;border-radius:6px;height:29px;font-size:12px;color:rgba(17,25,37,0.65);font-family:PingFangSC-Medium, 'Microsoft YaHei', sans-serif;font-weight:500;">
+          <div style="width:220px;min-width:220px;max-width:220px;display:flex;align-items:center;padding-left:12px;">
+            门店名称
+            <img src="images/排序.svg" class="sort-icon" style="width:16px;height:16px;margin-left:2px;cursor:pointer;opacity:0.5;transition:opacity 0.2s,filter 0.2s;filter:grayscale(1);" onclick="sortStoreList('name', this)">
+          </div>
+          <div style="width:80px;min-width:80px;max-width:80px;display:flex;align-items:center;justify-content:flex-end;margin-left:40px;">
+            <div style="flex:1;text-align:right;">门店营收</div>
+            <div style="display:flex;align-items:center;justify-content:center;height:100%;">
+              <img src="images/排序.svg" class="sort-icon" data-sort="revenue" style="width:16px;height:16px;margin-left:2px;cursor:pointer;vertical-align:middle;display:block;" onclick="sortStoreList('revenue', this)">
+            </div>
+          </div>
+          <div style="width:80px;min-width:80px;max-width:80px;display:flex;align-items:center;justify-content:flex-end;margin-left:40px;">
+            <div style="flex:1;text-align:right;">入住率</div>
+            <div style="display:flex;align-items:center;justify-content:center;height:100%;">
+              <img src="images/排序.svg" class="sort-icon" data-sort="occupancy" style="width:16px;height:16px;margin-left:2px;cursor:pointer;vertical-align:middle;display:block;" onclick="sortStoreList('occupancy', this)">
+            </div>
+          </div>
+          <div style="width:80px;min-width:80px;max-width:80px;display:flex;align-items:center;justify-content:flex-end;margin-left:40px;">
+            <div style="flex:1;text-align:right;">平均房价</div>
+            <div style="display:flex;align-items:center;justify-content:center;height:100%;">
+              <img src="images/排序.svg" class="sort-icon" data-sort="avgPrice" style="width:16px;height:16px;margin-left:2px;cursor:pointer;vertical-align:middle;display:block;" onclick="sortStoreList('avgPrice', this)">
+            </div>
+          </div>
+          <div style="width:80px;min-width:80px;max-width:80px;display:flex;align-items:center;justify-content:flex-end;position:absolute;right:12px;"> </div>
+        </div>
+        <div style="flex:1;overflow-y:auto;position:relative;">
+          <!-- 门店列表项 -->
+          <div style="display:flex;align-items:center;height:60px;border-bottom:1px solid rgba(17,25,37,0.07);">
+            <div style="width:220px;padding-left:12px;display:flex;align-items:center;">
+              <img src="images/以卡里大酒店望京店.png" style="width:36px;height:36px;border-radius:4px;object-fit:cover;" alt="以卡里大酒店望京店">
+              <div style="display:flex;flex-direction:column;margin-left:12px;">
+                <span style="font-size:15px;color:#1D2129;font-weight:500;">以卡里大酒店望京店</span>
+                <span style="font-size:12px;color:#C9CDD4;">id：000123</span>
+              </div>
+            </div>
+            <div style="width:80px;min-width:80px;max-width:80px;display:flex;align-items:center;justify-content:flex-end;position:relative;margin-left:40px;font-size:12px;color:#111925;font-family:'mtnewdigital',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-weight:500;">
+              <div style="flex:1;text-align:right;">¥ 34,123</div><div style="flex-shrink:0;min-width:18px;text-align:left;">↑</div>
+            </div>
+            <div style="width:80px;min-width:80px;max-width:80px;display:flex;align-items:center;justify-content:flex-end;position:relative;margin-left:40px;font-size:12px;color:#111925;font-family:'mtnewdigital',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-weight:500;">
+              <div style="flex:1;text-align:right;">38.12 %</div><div style="flex-shrink:0;min-width:18px;text-align:left;">↑</div>
+            </div>
+            <div style="width:80px;min-width:80px;max-width:80px;display:flex;align-items:center;justify-content:flex-end;position:relative;margin-left:40px;font-size:12px;color:#111925;font-family:'mtnewdigital',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-weight:500;">
+              <div style="flex:1;text-align:right;">¥ 34,123</div><div style="flex-shrink:0;min-width:18px;text-align:left;">↑</div>
+            </div>
+            <div style='width:80px;min-width:80px;max-width:80px;display:flex;align-items:center;justify-content:flex-end;position:absolute;right:12px;'>
+        <a href="#" style="color:#111925;font-size:12px;text-decoration:none;display:flex;align-items:center;font-family:PingFangSC-Medium, 'Microsoft YaHei', sans-serif;font-weight:500;">看详情 <img src='images/右箭头.svg' alt='' style='width:12px;height:12px;margin-left:2px;vertical-align:middle;'></a>
+      </div>
+          </div>
+          <!-- 其余门店项可复制上方结构，图片和数据可替换 -->
+        </div>
+      </div>
+    </div>
+                <!-- END 门店列表卡片 -->
                 <!-- 指标卡片组 -->
                 <div class="metrics-cards">
                     <!-- 总营收卡片 -->
@@ -5057,6 +5114,148 @@
             updatePromotionPlans();
         });
         // ... existing code ...
+
+        // 排序状态
+        var sortState = {
+          key: null, // 当前排序字段
+          order: null // 'asc' | 'desc' | null
+        };
+        function sortStoreList(type, icon) {
+          // 切换排序状态
+          if (sortState.key !== type) {
+            sortState.key = type;
+            sortState.order = 'asc';
+          } else if (sortState.order === 'asc') {
+            sortState.order = 'desc';
+          } else if (sortState.order === 'desc') {
+            sortState.key = null;
+            sortState.order = null;
+          } else {
+            sortState.order = 'asc';
+          }
+          // icon切换
+          document.querySelectorAll('.sort-icon').forEach(function(el) {
+            el.src = 'images/排序.svg';
+          });
+          if (sortState.key && sortState.order === 'asc') {
+            icon.src = 'images/排序-升序.svg';
+          } else if (sortState.key && sortState.order === 'desc') {
+            icon.src = 'images/排序-降序.svg';
+          }
+          // 排序数据并刷新列表
+          if (!window._hotelListCache) return; // 数据未加载
+          var hotels = window._hotelListCache.slice();
+          if (sortState.key && sortState.order) {
+            hotels.sort(function(a, b) {
+              var ka = a[sortState.key], kb = b[sortState.key];
+              if (sortState.key === 'name') {
+                // 字符串排序
+                if (sortState.order === 'asc') return ka.localeCompare(kb, 'zh-Hans-CN');
+                else return kb.localeCompare(ka, 'zh-Hans-CN');
+              } else {
+                // 数字排序
+                if (typeof ka === 'string') ka = ka.replace(/,/g, '');
+                if (typeof kb === 'string') kb = kb.replace(/,/g, '');
+                ka = parseFloat(ka); kb = parseFloat(kb);
+                if (sortState.order === 'asc') return ka - kb;
+                else return kb - ka;
+              }
+            });
+          }
+          renderHotelList(hotels);
+        }
+        // 缓存原始数据
+        fetch('hotels.json')
+          .then(res => res.json())
+          .then(hotels => {
+            // 检查并补全指标字段
+            hotels.forEach(hotel => {
+              if (typeof hotel.revenue !== 'number') hotel.revenue = Math.floor(Math.random() * 100000) + 10000;
+              if (typeof hotel.occupancy !== 'number') hotel.occupancy = Number((Math.random() * 70 + 20).toFixed(2));
+              if (typeof hotel.avgPrice !== 'number') hotel.avgPrice = Number((Math.random() * 800 + 200).toFixed(2));
+            });
+            window._hotelListCache = hotels;
+            renderHotelList(hotels);
+          });
+        // 渲染函数
+        function renderHotelList(hotels) {
+          const listContainer = document.querySelector('.store-list-card [style*="overflow-y:auto"]');
+          if (!listContainer) return;
+          listContainer.innerHTML = '';
+          hotels.forEach(hotel => {
+            function formatThousand(num) {
+              if (typeof num === 'number') num = num.toString();
+              return num.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            }
+            function randomStatus() {
+              const arr = [
+                '<img src="images/上升.svg" style="width:16px;height:16px;margin-left:2px;vertical-align:middle;">',
+                '<img src="images/下降.svg" style="width:16px;height:16px;margin-left:2px;vertical-align:middle;">',
+                ''
+              ];
+              return arr[Math.floor(Math.random()*arr.length)];
+            }
+            const revenue = hotel.revenue !== undefined ? hotel.revenue : 0;
+            const occupancy = hotel.occupancy !== undefined ? hotel.occupancy : 0;
+            const avgPrice = hotel.avgPrice !== undefined ? hotel.avgPrice : 0;
+            const row = document.createElement('div');
+            row.style = "display:flex;align-items:center;height:60px;border-bottom:1px solid rgba(17,25,37,0.07);cursor:pointer;transition:background 0.2s;";
+            row.innerHTML = `
+              <div style=\"width:220px;padding-left:12px;display:flex;align-items:center;\">
+                <img src=\"images/${hotel.name}.png\" style=\"width:36px;height:36px;border-radius:4px;object-fit:cover;\" alt=\"${hotel.name}\">
+                <div style=\"display:flex;flex-direction:column;margin-left:12px;justify-content:center;\">
+                  <span style=\"font-size:12px;color:#111925;font-family:'mtnewdigital',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-weight:500;\">${hotel.name}</span>
+                  <span style=\"font-size:12px;color:rgba(17,25,37,0.45);\">id：${hotel.id}</span>
+                </div>
+              </div>
+              <div style='width:80px;min-width:80px;max-width:80px;display:flex;align-items:center;justify-content:flex-end;position:relative;margin-left:40px;font-size:12px;color:#111925;font-family:"mtnewdigital",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-weight:500;'>
+                <div style=\"flex:1;text-align:right;\">¥ ${formatThousand(revenue)}</div><div style=\"flex-shrink:0;min-width:18px;text-align:left;\">${randomStatus()}</div>
+              </div>
+              <div style='width:80px;min-width:80px;max-width:80px;display:flex;align-items:center;justify-content:flex-end;position:relative;margin-left:40px;font-size:12px;color:#111925;font-family:"mtnewdigital",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-weight:500;'>
+                <div style=\"flex:1;text-align:right;\">${formatThousand(occupancy)} %</div><div style=\"flex-shrink:0;min-width:18px;text-align:left;\">${randomStatus()}</div>
+              </div>
+              <div style='width:80px;min-width:80px;max-width:80px;display:flex;align-items:center;justify-content:flex-end;position:relative;margin-left:40px;font-size:12px;color:#111925;font-family:"mtnewdigital",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-weight:500;'>
+                <div style=\"flex:1;text-align:right;\">¥ ${formatThousand(avgPrice)}</div><div style=\"flex-shrink:0;min-width:18px;text-align:left;\">${randomStatus()}</div>
+              </div>
+              <div style='width:80px;min-width:80px;max-width:80px;display:flex;align-items:center;justify-content:flex-end;position:absolute;right:12px;'>
+                <a href=\"#\" class=\"store-detail-link\" style=\"color:#111925;font-size:12px;text-decoration:none;display:flex;align-items:center;font-family:PingFangSC-Medium, 'Microsoft YaHei', sans-serif;font-weight:500;\">看详情 <img class='store-detail-arrow' src='images/右箭头.svg' alt='' style='width:12px;height:12px;margin-left:2px;vertical-align:middle;opacity:0.3;transition:opacity 0.3s;'></a>
+              </div>
+            `;
+            // hover 效果
+            row.addEventListener('mouseenter', function() {
+              row.style.background = '#f5f5f5';
+              var arrow = row.querySelector('.store-detail-arrow');
+              if (arrow) arrow.style.opacity = '0.6';
+            });
+            row.addEventListener('mouseleave', function() {
+              row.style.background = '';
+              var arrow = row.querySelector('.store-detail-arrow');
+              if (arrow) arrow.style.opacity = '0.3';
+            });
+            // 行点击弹窗
+            row.addEventListener('click', function(e) {
+              // 避免a标签默认跳转
+              e.preventDefault();
+              var modal = document.getElementById('messageModal');
+              if (modal) modal.classList.add('active');
+            });
+            // a标签hover动画（参考行动建议）
+            var detailLink = row.querySelector('.store-detail-link');
+            var arrow = row.querySelector('.store-detail-arrow');
+            if (detailLink && arrow) {
+              detailLink.addEventListener('mouseenter', function() {
+                arrow.style.opacity = '0.6';
+                arrow.style.transition = 'opacity 0.3s';
+                arrow.style.transform = '';
+              });
+              detailLink.addEventListener('mouseleave', function() {
+                arrow.style.opacity = row.matches(':hover') ? '0.6' : '0.3';
+                arrow.style.transform = '';
+              });
+            }
+            listContainer.appendChild(row);
+          });
+        }
     </script>
 </body>
 </html> 
