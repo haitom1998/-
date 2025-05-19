@@ -192,12 +192,15 @@
         }
 
         .main-content {
+            position: relative;
             flex: 1;
-            padding: 20px 0 16px 0;
+            padding: 20px 0 20px 0;
             background-color: #FFFFFF;
             border-radius: 12px;
             min-width: 0;
-            position: relative;
+            min-height: 0;
+            height: calc(677px + 403px + 20px); /* 677为promotion-plan-card的top，403为其高度，20为下边距 */
+            box-sizing: border-box;
         }
 
         /* 顶部标题区域样式 */
@@ -898,14 +901,15 @@
         .main-card {
             width: 306px;
             height: 192px;
-            margin: 0 0 0 16px;
             padding: 0;
             background-image: url('images/主卡片.png');
             background-size: cover;
             background-position: center;
             border-radius: 12px;
             color: #111925;
-            position: relative;
+            position: absolute;
+            left: 16px;
+            top: 76px;
         }
 
         .main-card .more-actions {
@@ -1033,11 +1037,11 @@
         .metrics-cards {
             display: flex;
             gap: 16px;
-            margin-left: 16px;
             height: 192px;
             position: absolute;
-            left: 322px;
-            width: calc(100% - 620px);
+            left: 338px;
+            right: 282px;
+            top: 76px;
         }
 
         .metric-card {
@@ -1048,6 +1052,49 @@
             border-radius: 12px;
             padding: 20px;
             position: relative;
+            cursor: pointer;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            bottom: -1px;
+            border-radius: 12px;
+            border: 1px solid transparent;
+            transition: border-color 0.3s ease;
+            pointer-events: none;
+        }
+
+        .metric-card::after {
+            content: '查看趋势';
+            position: absolute;
+            top: -36px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.75);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .metric-card:hover::before {
+            border-color: #111925;
+            border-width: 2px;
+        }
+
+        .metric-card:hover::after {
+            opacity: 1;
+            visibility: visible;
         }
 
         .metric-card .more-actions {
@@ -1184,6 +1231,247 @@
             width: 16px;
             height: 16px;
             margin-left: 2px;
+        }
+
+        /* 趋势图卡片样式 */
+        .trend-card {
+            position: absolute;
+            left: 338px;
+            right: 282px;
+            top: 284px;
+            height: 377px;
+            background: #FFFFFF;
+            border: 1px solid rgba(17, 25, 37, 0.15);
+            border-radius: 12px;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .trend-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px 0 12px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .trend-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .trend-title-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #111925;
+            font-family: PingFangSC-Semibold, "Microsoft YaHei", sans-serif;
+        }
+
+        .trend-selector {
+            position: relative;
+            cursor: pointer;
+            margin-left: 16px;
+        }
+
+        .trend-selected {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 14px;
+            color: #111925;
+        }
+
+        .trend-arrow {
+            width: 12px;
+            height: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .trend-selector.active .trend-arrow {
+            transform: rotate(180deg);
+        }
+
+        .trend-options {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 4px 0;
+            display: none;
+            z-index: 1000;
+            min-width: 90px;
+        }
+
+        .trend-selector.active .trend-options {
+            display: block;
+        }
+
+        .trend-option {
+            padding: 8px 12px;
+            font-size: 14px;
+            color: #111925;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            line-height: 20px;
+            white-space: nowrap;
+        }
+
+        .trend-option:hover {
+            background: #F2F3F5;
+        }
+
+        .trend-option.selected {
+            color: #165DFF;
+            background-color: #F2F3F5;
+        }
+
+        .trend-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .trend-toggle-label {
+            font-size: 14px;
+            color: #4E5969;
+        }
+
+        .trend-toggle-switch {
+            width: 28px;
+            height: 16px;
+            background: #FFD100;
+            border-radius: 10px;
+            position: relative;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .trend-toggle-switch::before {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s ease;
+        }
+
+        .trend-toggle-switch.off {
+            background: #E5E6EB;
+        }
+
+        .trend-toggle-switch.off::before {
+            transform: translateX(12px);
+        }
+
+        /* 节假日标签样式 */
+        .holiday-label {
+            position: absolute;
+            font-size: 12px;
+            color: #FF4D4F;
+            white-space: nowrap;
+            transform: translateX(-50%);
+            top: -20px;
+        }
+
+        .trend-chart {
+            flex: 1;
+            position: relative;
+            z-index: 1;
+            min-height: 0;
+        }
+
+        .trend-legend {
+    display: flex;
+    gap: 16px;
+    margin-top: 16px;
+    padding-left: 12px;
+}
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #4E5969;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 2px;
+            border-radius: 1px;
+        }
+
+        .legend-color.brand {
+            background: #FFD100;
+        }
+
+        .legend-color.industry {
+            background: #86909C;
+            border: 1px dashed #86909C;
+        }
+
+        .trend-slider {
+            height: 24px;
+            position: relative;
+            padding: 0 8px;
+        }
+
+        .trend-slider .track {
+            height: 4px;
+            background: #F2F3F5;
+            border-radius: 2px;
+            position: relative;
+            margin-top: 10px;
+        }
+
+        .trend-slider .range {
+            position: absolute;
+            height: 100%;
+            background: #FFD100;
+            border-radius: 2px;
+        }
+
+        .trend-slider .handle {
+            width: 16px;
+            height: 16px;
+            background: white;
+            border: 2px solid #FFD100;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            z-index: 1;
+        }
+
+        .trend-slider .handle:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .trend-slider .handle.left {
+            left: 0;
+        }
+
+        .trend-slider .handle.right {
+            right: 0;
+        }
+
+        .trend-time-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4px;
+            padding: 0 8px;
+            font-size: 12px;
+            color: #86909C;
         }
 
         @font-face {
@@ -1484,7 +1772,7 @@
             font-family: 'mtnewdigital', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
-                    .rating-breakdown .bar-tooltip {
+        .rating-breakdown .bar-tooltip {
             position: absolute;
             background: rgba(0, 0, 0, 0.75);
             color: white;
@@ -1528,6 +1816,325 @@
         .rating-breakdown .breakdown-item .bar-segment:only-child {
             border-radius: 4px;
         }
+
+        /* 快捷操作卡片样式 */
+.quick-actions {
+    position: absolute;
+    left: 16px;
+    top: 284px;
+    width: 306px;
+    height: 89px;
+    background: #f6f6f6;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px;
+    z-index: 1;
+}
+
+        .quick-action-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 8px;
+    border-radius: 8px;
+}
+
+.quick-action-item:hover {
+    background-color: rgba(17, 25, 37, 0.05);
+}
+
+        .quick-action-item img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .quick-action-item .label {
+    font-size: 14px;
+    color: #111925;
+    line-height: 22px;
+}
+
+        /* 行动建议卡片样式 */
+        .action-suggestions {
+    position: absolute;
+    left: 16px;
+    top: 389px;
+    width: 306px;
+    height: 272px;
+    background: #FFFFFF;
+    border-radius: 12px;
+    border: 1px solid rgba(17, 25, 37, 0.15);
+    padding: 16px 12px 16px 12px;
+}
+
+.action-suggestions .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 22px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #111925;
+    line-height: 22px;
+    margin-bottom: 12px;
+}
+
+.action-suggestions .more-actions {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.action-suggestions .more-actions img {
+    width: 16px;
+    height: 16px;
+}
+
+.action-suggestions .more-actions:hover {
+    background-color: rgba(17, 25, 37, 0.05);
+}
+
+        .suggestion-item {
+    height: 33px;
+    width: 277px;
+    background: #f5f5f5;
+    border-radius: 8px;
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.suggestion-item:last-of-type {
+    margin-bottom: 0;
+}
+
+.suggestion-item:hover {
+    background-color: #ECEDEF;
+}
+
+.suggestion-item:hover .arrow {
+    opacity: 0.6;
+}
+
+.suggestion-item::before {
+    content: attr(data-title);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: calc(100% + 8px);
+    background: rgba(0, 0, 0, 0.75);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    line-height: 20px;
+    white-space: nowrap;
+    z-index: 10;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.suggestion-item[data-ellipsis="true"]:hover::before {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.suggestion-item:not([data-ellipsis="true"]):hover::before {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.suggestion-item .tag {
+    width: 28px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+.suggestion-item .tag img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.suggestion-item .content {
+    width: 205px;
+    font-size: 12px;
+    color: #111925;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: relative;
+    display: block;
+}
+
+.suggestion-item .arrow {
+    width: 16px;
+    height: 16px;
+    opacity: 0.3;
+    transition: opacity 0.3s ease;
+    flex-shrink: 0;
+}
+
+.promotion-plan-card {
+    width: 306px;
+    position: absolute;
+    left: 16px;
+    top: 677px;
+    height: 403px;
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid rgba(17, 25, 37, 0.15);
+    box-sizing: border-box;
+    padding: 16px 12px 0 12px;
+    box-shadow: none;
+}
+.promotion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    margin-top: 0;
+    margin-left: 0;
+}
+.promotion-title {
+    font-size: 14px;
+    font-family: PingFangSC-Medium, "Microsoft YaHei", sans-serif;
+    font-weight: 500;
+    color: #1D2129;
+}
+.promotion-add-btn {
+    border: 1px solid #E5E6EB;
+    background: #fff;
+    color: #4E5969;
+    border-radius: 20px;
+    font-size: 14px;
+    padding: 2px 16px;
+    cursor: pointer;
+    outline: none;
+}
+.promotion-total-label {
+    font-size: 12px;
+    color: rgba(17,25,37,0.3);
+    margin-bottom: 2px;
+    margin-top: 12px;
+    margin-left: 0;
+}
+.promotion-total-value {
+    font-size: 24px;
+    font-family: 'mtnewdigital', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-weight: bold;
+    color: #1D2129;
+    margin-bottom: 10px;
+    margin-top: 4px;
+}
+.promotion-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+.promotion-item {
+    height: 84px;
+    width: 100%;
+    margin-right: 0;
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #E5E6EB;
+    padding: 8px 12px 12px 12px;
+    box-sizing: border-box;
+    box-shadow: none;
+}
+.promotion-item-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+.promotion-item-title {
+    font-size: 14px;
+    color: #111925;
+    font-family: PingFangSC-Medium, "Microsoft YaHei", sans-serif;
+    font-weight: 500;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.promotion-item-badge {
+    font-size: 12px;
+    color: #FFB800;
+    background: #FFF7E8;
+    border-radius: 4px;
+    padding: 2px 8px;
+    margin-left: 4px;
+}
+.promotion-item-menu {
+    font-size: 20px;
+    color: #C9CDD4;
+    cursor: pointer;
+    margin-left: auto;
+    user-select: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+.promotion-item-menu:hover {
+    background-color: rgba(17, 25, 37, 0.05);
+}
+.promotion-progress-bar {
+    width: 252px;
+    margin-left: 0;
+    margin-right: 12px;
+    height: 6px;
+    background: #F2F3F5;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+.promotion-progress-bar .progress {
+    height: 100%;
+    background: #FFD100;
+    border-radius: 4px;
+    transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.promotion-item-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: #86909C;
+    margin-top: 2px;
+}
+.promotion-item-used {
+    color: #1D2129;
+    font-weight: 500;
+}
+.promotion-item-budget {
+    color: #86909C;
+}
     </style>
 </head>
 <body>
@@ -1701,6 +2308,112 @@
                         </div>
                     </div>
                 </div>
+                <!-- 快捷操作卡片 -->
+                <div class="quick-actions">
+                    <div class="quick-action-item" data-modal="message">
+                        <img src="images/房型管理.svg" alt="房型管理">
+                        <span class="label">房型管理</span>
+                    </div>
+                    <div class="quick-action-item" data-modal="message">
+                        <img src="images/活动管理.svg" alt="活动管理">
+                        <span class="label">活动管理</span>
+                    </div>
+                    <div class="quick-action-item" data-modal="message">
+                        <img src="images/推广管理.svg" alt="推广管理">
+                        <span class="label">推广管理</span>
+                    </div>
+                </div>
+                
+                <!-- 行动建议卡片 -->
+                <div class="action-suggestions">
+                    <div class="card-header">
+                        行动建议
+                        <div class="more-actions" data-modal="message">
+                            <img src="images/更多操作.svg" alt="更多操作">
+                        </div>
+                    </div>
+                    <div class="suggestion-item" data-title="端午假期即将来临，推荐设置促销">
+                        <div class="tag">
+                            <img src="images/节日.svg" alt="节日">
+                        </div>
+                        <span class="content">端午假期即将来临，推荐设置促销</span>
+                        <img src="images/右箭头.svg" alt="查看详情" class="arrow">
+                    </div>
+                    <div class="suggestion-item" data-title="18-25岁群体评分较低，建议针对优化">
+                        <div class="tag">
+                            <img src="images/优化.svg" alt="优化">
+                        </div>
+                        <span class="content">18-25岁群体评分较低，建议针对优化</span>
+                        <img src="images/右箭头.svg" alt="查看详情" class="arrow">
+                    </div>
+                    <div class="suggestion-item" data-title="北京地区营收降低，建议倾斜营销预算">
+                        <div class="tag">
+                            <img src="images/优化.svg" alt="优化">
+                        </div>
+                        <span class="content">北京地区营收降低，建议倾斜营销预算</span>
+                        <img src="images/右箭头.svg" alt="查看详情" class="arrow">
+                    </div>
+                    <div class="suggestion-item" data-title="望京店房型不合规，请整改">
+                        <div class="tag">
+                            <img src="images/整改.svg" alt="整改">
+                        </div>
+                        <span class="content">望京店房型不合规，请整改</span>
+                        <img src="images/右箭头.svg" alt="查看详情" class="arrow">
+                    </div>
+                    <div class="suggestion-item" data-title="品牌综合排名下降，建议提升推广">
+                        <div class="tag">
+                            <img src="images/优化.svg" alt="优化">
+                        </div>
+                        <span class="content">品牌综合排名下降，建议提升推广</span>
+                        <img src="images/右箭头.svg" alt="查看详情" class="arrow">
+                    </div>
+                </div>
+                <!-- 推广计划卡片 -->
+                <div class="promotion-plan-card">
+                    <div class="promotion-header">
+                        <span class="promotion-title">推广计划</span>
+                        <button class="promotion-add-btn">+ 添加计划</button>
+                    </div>
+                    <div class="promotion-total-label">总预算</div>
+                    <div class="promotion-total-value">￥3,423,430.00</div>
+                    <div class="promotion-list">
+                        <div class="promotion-item">
+                            <div class="promotion-item-title-row">
+                                <span class="promotion-item-title">夏季大促</span>
+                                <span class="promotion-item-menu"><img src="images/更多操作.svg" alt="更多操作"></span>
+                            </div>
+                            <div class="promotion-progress-bar"><div class="progress" style="width:51.2%"></div></div>
+                            <div class="promotion-item-footer">
+                                <span class="promotion-item-used">已用￥1,753,000.00</span>
+                                <span class="promotion-item-budget">预算￥3,423,430.00</span>
+                            </div>
+                        </div>
+                        <div class="promotion-item">
+                            <div class="promotion-item-title-row">
+                                <span class="promotion-item-title">端午节推广</span>
+                                <span class="promotion-item-badge">进行中</span>
+                                <span class="promotion-item-menu"><img src="images/更多操作.svg" alt="更多操作"></span>
+                            </div>
+                            <div class="promotion-progress-bar"><div class="progress" style="width:32.8%"></div></div>
+                            <div class="promotion-item-footer">
+                                <span class="promotion-item-used">已用￥1,123,000.00</span>
+                                <span class="promotion-item-budget">预算￥2,000,000.00</span>
+                            </div>
+                        </div>
+                        <div class="promotion-item">
+                            <div class="promotion-item-title-row">
+                                <span class="promotion-item-title">新品上线</span>
+                                <span class="promotion-item-menu"><img src="images/更多操作.svg" alt="更多操作"></span>
+                            </div>
+                            <div class="promotion-progress-bar"><div class="progress" style="width:12.5%"></div></div>
+                            <div class="promotion-item-footer">
+                                <span class="promotion-item-used">已用￥250,000.00</span>
+                                <span class="promotion-item-budget">预算￥2,000,000.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 指标卡片组 -->
                 <div class="metrics-cards">
                     <!-- 总营收卡片 -->
                     <div class="metric-card">
@@ -1765,6 +2478,54 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- 趋势图卡片 -->
+            <div class="trend-card">
+                <div class="trend-header">
+                    <div class="trend-title">
+                        <span class="trend-title-text">数据趋势</span>
+                        <div class="trend-selector">
+                            <div class="trend-selected">
+                                总营收
+                                <svg class="trend-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M2.5 4.5L6 8L9.5 4.5" stroke="#4E5969" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                            <div class="trend-options">
+                                <div class="trend-option selected" data-metric="revenue">总营收</div>
+                                <div class="trend-option" data-metric="occupancy">入住率</div>
+                                <div class="trend-option" data-metric="avgPrice">平均房价</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="trend-toggle">
+                        <span class="trend-toggle-label">展示节假日</span>
+                        <div class="trend-toggle-switch"></div>
+                    </div>
+                </div>
+                <div class="trend-legend">
+                    <div class="legend-item">
+                        <span class="legend-color brand"></span>
+                        <span>本品牌</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color industry"></span>
+                        <span>行业均值</span>
+                    </div>
+                </div>
+                <div class="trend-chart" id="trendChart"></div>
+                <div class="trend-slider">
+                    <div class="track">
+                        <div class="range"></div>
+                        <div class="handle left"></div>
+                        <div class="handle right"></div>
+                    </div>
+                </div>
+                <div class="trend-time-labels">
+                    <span>2023-09-18</span>
+                    <span>2023-10-08</span>
                 </div>
             </div>
 
@@ -1891,6 +2652,414 @@
     </div>
 
     <script>
+        // 生成平滑曲线路径数据
+        function getCurvePoints(points) {
+            const smoothing = 0.2;
+            const line = [];
+            
+            for (let i = 0; i < points.length; i++) {
+                if (i === 0) {
+                    line.push('M', points[i].x, points[i].y);
+                } else {
+                    const prevPoint = points[i - 1];
+                    const currentPoint = points[i];
+                    const nextPoint = points[i + 1];
+                    
+                    if (i === points.length - 1) {
+                        line.push('L', currentPoint.x, currentPoint.y);
+                    } else {
+                        const cp1x = prevPoint.x + (currentPoint.x - prevPoint.x) * smoothing;
+                        const cp1y = prevPoint.y + (currentPoint.y - prevPoint.y) * smoothing;
+                        const cp2x = currentPoint.x - (nextPoint.x - prevPoint.x) * smoothing;
+                        const cp2y = currentPoint.y - (nextPoint.y - prevPoint.y) * smoothing;
+                        
+                        line.push('C', cp1x, cp1y, cp2x, cp2y, currentPoint.x, currentPoint.y);
+                    }
+                }
+            }
+            return line.join(' ');
+        }
+
+        function drawTrendChart(data, metric = 'revenue') {
+            const chart = document.getElementById('trendChart');
+            const width = chart.clientWidth;
+            const height = chart.clientHeight;
+            const padding = { top: 20, right: 20, bottom: 30, left: 60 };
+            
+            // 清空现有内容
+            chart.innerHTML = '';
+            
+            // 创建SVG
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('width', width);
+            svg.setAttribute('height', height);
+            chart.appendChild(svg);
+
+            // 判断是否显示节假日
+            const showHolidays = !document.querySelector('.trend-toggle-switch').classList.contains('off');
+            
+            // 节假日数据（示例）
+            const holidays = [
+                { date: '2023-10-01', name: '国庆节' },
+                { date: '2023-10-02', name: '国庆节' },
+                { date: '2023-10-03', name: '国庆节' },
+                { date: '2023-10-04', name: '国庆节' },
+                { date: '2023-10-05', name: '国庆节' },
+                { date: '2023-10-06', name: '国庆节' },
+                { date: '2023-10-07', name: '国庆节' },
+                { date: '2023-09-29', name: '中秋节' },
+                { date: '2023-09-30', name: '中秋节' }
+            ];
+            
+            // 添加tooltip容器
+            const tooltip = document.createElement('div');
+            tooltip.className = 'chart-tooltip';
+            tooltip.style.cssText = `
+                position: absolute;
+                display: none;
+                background: rgba(0, 0, 0, 0.65);
+                color: white;
+                padding: 8px 12px;
+                border-radius: 4px;
+                font-size: 12px;
+                pointer-events: none;
+                z-index: 10;
+                white-space: nowrap;
+                transition: all 0.2s ease-out;
+                opacity: 0;
+                transform: translateY(5px);
+            `;
+            chart.appendChild(tooltip);
+            
+            // 添加垂直参考线
+            const verticalLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            verticalLine.setAttribute('stroke', '#86909C');
+            verticalLine.setAttribute('stroke-width', '1');
+            verticalLine.setAttribute('stroke-dasharray', '4,4');
+            verticalLine.style.cssText = 'display: none; transition: transform 0.1s ease-out;';
+            svg.appendChild(verticalLine);
+            
+            // 添加hover点
+            const hoverDotBrand = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            const hoverDotIndustry = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            const hoverDotStyle = `
+                display: none;
+                transition: all 0.15s ease-out;
+                transform-origin: center center;
+            `;
+            hoverDotBrand.setAttribute('r', '4');
+            hoverDotBrand.setAttribute('fill', '#FFD100');
+            hoverDotBrand.style.cssText = hoverDotStyle;
+            hoverDotIndustry.setAttribute('r', '4');
+            hoverDotIndustry.setAttribute('fill', '#86909C');
+            hoverDotIndustry.style.cssText = hoverDotStyle;
+            svg.appendChild(hoverDotBrand);
+            svg.appendChild(hoverDotIndustry);
+            
+            // 计算比例尺
+            const xScale = width - padding.left - padding.right;
+            const yScale = height - padding.top - padding.bottom;
+            
+            // 根据不同指标设置合适的Y轴最大值和数据处理方式
+            let yMax, yMin = 0;
+            const maxValue = Math.max(...data.map(d => Math.max(d.brand, d.industry)));
+            
+            switch(metric) {
+                case 'revenue':
+                    yMax = Math.ceil(maxValue / 10000) * 10000;
+                    break;
+                case 'occupancy':
+                    yMin = 50; // 设置最小值为50%
+                    yMax = 100;
+                    break;
+                case 'avgPrice':
+                    yMin = 300; // 设置最小值为300元
+                    yMax = 700; // 设置最大值为700元
+                    break;
+                default:
+                    yMax = Math.ceil(maxValue / 10) * 10;
+            }
+            
+            // 格式化Y轴数值
+            const formatValue = (value) => {
+                switch(metric) {
+                    case 'revenue':
+                        return Math.floor(value / 10000) + '万';
+                    case 'occupancy':
+                        return Math.floor(value) + '%';
+                    case 'avgPrice':
+                        return Math.floor(value) + '元';
+                    default:
+                        return value;
+                }
+            };
+            
+            // Y轴
+            const yTicks = 5;
+            for (let i = 0; i <= yTicks; i++) {
+                const value = yMin + ((yMax - yMin) / yTicks) * i;
+                const y = height - padding.bottom - ((value - yMin) / (yMax - yMin) * yScale);
+                
+                // 绘制横向网格线
+                const gridLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                gridLine.setAttribute('x1', padding.left);
+                gridLine.setAttribute('x2', width - padding.right);
+                gridLine.setAttribute('y1', y);
+                gridLine.setAttribute('y2', y);
+                gridLine.setAttribute('stroke', '#E5E6EB');
+                gridLine.setAttribute('stroke-width', '1');
+                svg.appendChild(gridLine);
+                
+                // 添加Y轴刻度值
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', padding.left - 8);
+                text.setAttribute('y', y);
+                text.setAttribute('text-anchor', 'end');
+                text.setAttribute('dominant-baseline', 'middle');
+                text.setAttribute('fill', '#86909C');
+                text.setAttribute('font-size', '12');
+                text.textContent = formatValue(value);
+                svg.appendChild(text);
+            }
+            
+            // 准备数据点
+            const brandPoints = data.map((d, i) => ({
+                x: padding.left + (i * xScale / (data.length - 1)),
+                y: height - padding.bottom - ((d.brand - yMin) / (yMax - yMin) * yScale)
+            }));
+            
+            const industryPoints = data.map((d, i) => ({
+                x: padding.left + (i * xScale / (data.length - 1)),
+                y: height - padding.bottom - ((d.industry - yMin) / (yMax - yMin) * yScale)
+            }));
+            
+            // 生成平滑路径
+            const brandD = getCurvePoints(brandPoints);
+            const industryD = getCurvePoints(industryPoints);
+            
+            // 创建路径
+            const brandPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            const industryPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            
+            // 设置路径样式
+            brandPath.setAttribute('d', brandD);
+            brandPath.setAttribute('stroke', '#FFD100');
+            brandPath.setAttribute('stroke-width', '2.5');
+            brandPath.setAttribute('fill', 'none');
+            
+            industryPath.setAttribute('d', industryD);
+            industryPath.setAttribute('stroke', '#86909C');
+            industryPath.setAttribute('stroke-width', '2.5');
+            industryPath.setAttribute('stroke-dasharray', '4,4');
+            industryPath.setAttribute('fill', 'none');
+            
+            // 添加渐变填充
+            const gradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+            gradient.setAttribute('id', 'areaGradient');
+            gradient.setAttribute('x1', '0');
+            gradient.setAttribute('y1', '0');
+            gradient.setAttribute('x2', '0');
+            gradient.setAttribute('y2', '1');
+            
+            const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+            stop1.setAttribute('offset', '0%');
+            stop1.setAttribute('stop-color', '#FFD100');
+            stop1.setAttribute('stop-opacity', '0.2');
+            
+            const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+            stop2.setAttribute('offset', '100%');
+            stop2.setAttribute('stop-color', '#FFD100');
+            stop2.setAttribute('stop-opacity', '0');
+            
+            gradient.appendChild(stop1);
+            gradient.appendChild(stop2);
+            svg.appendChild(gradient);
+            
+            // 添加面积
+            const areaPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            let areaD = brandD + `L ${padding.left + xScale},${height - padding.bottom} L ${padding.left},${height - padding.bottom} Z`;
+            areaPath.setAttribute('d', areaD);
+            areaPath.setAttribute('fill', 'url(#areaGradient)');
+            
+            // 按正确的顺序添加元素
+            svg.appendChild(areaPath);
+            svg.appendChild(industryPath);
+            svg.appendChild(brandPath);
+
+            // 在SVG上添加透明的交互层
+            const overlay = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            overlay.setAttribute('x', padding.left);
+            overlay.setAttribute('y', padding.top);
+            overlay.setAttribute('width', xScale);
+            overlay.setAttribute('height', yScale);
+            overlay.setAttribute('fill', 'transparent');
+            svg.appendChild(overlay);
+
+            // 添加鼠标交互
+            let currentIndex = -1;
+            overlay.addEventListener('mousemove', (e) => {
+                const chartRect = chart.getBoundingClientRect();
+                const mouseX = e.clientX - chartRect.left - padding.left;
+                
+                // 计算最近的数据点索引
+                const index = Math.round((mouseX / xScale) * (data.length - 1));
+                
+                if (index >= 0 && index < data.length) {
+                    const point = data[index];
+                    const x = padding.left + (index * xScale / (data.length - 1));
+                    const brandY = height - padding.bottom - ((point.brand - yMin) / (yMax - yMin) * yScale);
+                    const industryY = height - padding.bottom - ((point.industry - yMin) / (yMax - yMin) * yScale);
+                    
+                    // 更新垂直线位置
+                    verticalLine.style.display = 'block';
+                    verticalLine.setAttribute('x1', x);
+                    verticalLine.setAttribute('y1', padding.top);
+                    verticalLine.setAttribute('x2', x);
+                    verticalLine.setAttribute('y2', height - padding.bottom);
+                    
+                    // 更新hover点位置
+                    const updateHoverDot = (dot, cy) => {
+                        dot.style.display = 'block';
+                        dot.setAttribute('cx', x);
+                        dot.setAttribute('cy', cy);
+                        // 添加缩放动画
+                        dot.style.transform = 'scale(1)';
+                    };
+                    
+                    updateHoverDot(hoverDotBrand, brandY);
+                    updateHoverDot(hoverDotIndustry, industryY);
+                    
+                    // 更新tooltip内容和位置
+                    const date = point.date;
+                    const dateStr = `${date.getMonth() + 1}月${date.getDate()}日`;
+                    let tooltipContent = `
+                        <div style="margin-bottom: 4px;">${dateStr}</div>
+                        <div style="display: flex; align-items: center; margin-bottom: 4px;">
+                            <span style="display: inline-block; width: 8px; height: 8px; background: #FFD100; border-radius: 50%; margin-right: 6px;"></span>
+                            <span>本品牌：${formatValue(point.brand)}</span>
+                        </div>
+                        <div style="display: flex; align-items: center;">
+                            <span style="display: inline-block; width: 8px; height: 8px; background: #86909C; border-radius: 50%; margin-right: 6px;"></span>
+                            <span>行业均值：${formatValue(point.industry)}</span>
+                        </div>
+                    `;
+                    
+                    tooltip.innerHTML = tooltipContent;
+                    tooltip.style.display = 'block';
+                    tooltip.style.opacity = '1';
+                    tooltip.style.transform = 'translateY(0)';
+                    
+                    // 计算tooltip位置，避免超出边界
+                    const tooltipX = e.clientX - chartRect.left + 10;
+                    const tooltipY = e.clientY - chartRect.top - tooltip.offsetHeight - 10;
+                    
+                    // 确保tooltip不会超出图表边界
+                    if (tooltipX + tooltip.offsetWidth > width) {
+                        tooltip.style.left = (tooltipX - tooltip.offsetWidth - 20) + 'px';
+                    } else {
+                        tooltip.style.left = tooltipX + 'px';
+                    }
+                    
+                    if (tooltipY < 0) {
+                        tooltip.style.top = (e.clientY - chartRect.top + 10) + 'px';
+                    } else {
+                        tooltip.style.top = tooltipY + 'px';
+                    }
+                }
+            });
+
+            // 修改mouseleave事件处理
+            overlay.addEventListener('mouseleave', () => {
+                verticalLine.style.display = 'none';
+                
+                // 添加hover点的缩放退出动画
+                hoverDotBrand.style.transform = 'scale(0)';
+                hoverDotIndustry.style.transform = 'scale(0)';
+                setTimeout(() => {
+                    hoverDotBrand.style.display = 'none';
+                    hoverDotIndustry.style.display = 'none';
+                }, 150);
+                
+                // 添加tooltip的淡出动画
+                tooltip.style.opacity = '0';
+                tooltip.style.transform = 'translateY(5px)';
+                setTimeout(() => {
+                    tooltip.style.display = 'none';
+                }, 200);
+            });
+
+            // 在绘制完图表主体后，添加节假日标签
+            if (showHolidays) {
+                holidays.forEach(holiday => {
+                    const holidayDate = new Date(holiday.date);
+                    const matchingDataPoint = data.find(d => 
+                        d.date.getFullYear() === holidayDate.getFullYear() &&
+                        d.date.getMonth() === holidayDate.getMonth() &&
+                        d.date.getDate() === holidayDate.getDate()
+                    );
+
+                    if (matchingDataPoint) {
+                        const index = data.indexOf(matchingDataPoint);
+                        const x = padding.left + (index / (data.length - 1)) * xScale;
+                        
+                        // 创建节假日标签
+                        const label = document.createElement('div');
+                        label.className = 'holiday-label';
+                        label.textContent = holiday.name;
+                        label.style.left = x + 'px';
+                        chart.appendChild(label);
+                    }
+                });
+            }
+        }
+
+        // 生成趋势图数据
+        function generateTrendData(days = 30, metric = 'revenue') {
+            const data = [];
+            const today = new Date();
+            
+            // 根据不同指标生成合适范围的随机数据
+            const getRandomValue = (metric) => {
+                let baseValue, minValue, maxValue;
+                switch(metric) {
+                    case 'revenue':
+                        // 总营收范围：300-700万
+                        baseValue = 500 * 10000;
+                        minValue = 300 * 10000;
+                        maxValue = 700 * 10000;
+                        return Math.round(minValue + Math.random() * (maxValue - minValue));
+                    case 'occupancy':
+                        // 入住率范围：60-85%
+                        minValue = 60;
+                        maxValue = 85;
+                        return Number((minValue + Math.random() * (maxValue - minValue)).toFixed(1));
+                    case 'avgPrice':
+                        // 平均房价范围：350-650元
+                        minValue = 350;
+                        maxValue = 650;
+                        return Math.round(minValue + Math.random() * (maxValue - minValue));
+                    default:
+                        return Math.floor(Math.random() * 20000) + 10000;
+                }
+            };
+            
+            for (let i = 0; i < days; i++) {
+                const date = new Date(today);
+                date.setDate(date.getDate() - i);
+                
+                const brandValue = getRandomValue(metric);
+                const industryValue = getRandomValue(metric);
+                
+                data.unshift({
+                    date: date,
+                    brand: brandValue,
+                    industry: industryValue
+                });
+            }
+            
+            return data;
+        }
+
         // 获取所有导航项
         const navItems = document.querySelectorAll('.nav-item');
         const sidebar = document.querySelector('.sidebar');
@@ -1915,6 +3084,78 @@
         });
 
         document.addEventListener('DOMContentLoaded', function() {
+            // 初始化趋势图
+            const trendData = generateTrendData();
+            drawTrendChart(trendData);
+
+            // 初始化环形图
+            updateDonutChart();
+            
+            // 初始化堆叠条形图
+            updateStackedBars('age');
+
+            // 初始化维度选择器
+            initializeDimensionSelector();
+
+            // 为趋势图指标切换添加事件监听
+            const trendOptions = document.querySelectorAll('.trend-option');
+            const trendSelector = document.querySelector('.trend-selector');
+            const trendSelected = document.querySelector('.trend-selected');
+
+            trendSelected.addEventListener('click', function(e) {
+                e.stopPropagation();
+                trendSelector.classList.toggle('active');
+            });
+
+            trendOptions.forEach(option => {
+                option.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    trendOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    
+                    // 更新趋势图
+                    const metric = this.dataset.metric;
+                    const trendData = generateTrendData(30, metric);
+                    drawTrendChart(trendData, metric);
+                });
+            });
+
+            // 为节假日开关添加事件监听
+            const holidayToggle = document.querySelector('.trend-toggle-switch');
+            holidayToggle.addEventListener('click', function() {
+                this.classList.toggle('off');
+                const trendData = generateTrendData();
+                const selectedMetric = document.querySelector('.trend-option.selected').dataset.metric;
+                drawTrendChart(trendData, selectedMetric);
+            });
+
+            // 监听窗口大小变化，重新绘制图表
+            window.addEventListener('resize', function() {
+                const selectedMetric = document.querySelector('.trend-option.selected').dataset.metric;
+                drawTrendChart(trendData, selectedMetric);
+                updateDonutChart();
+            });
+
+            // 日期选择器确认按钮点击时更新所有图表
+            const dateConfirmBtn = document.querySelector('.btn-confirm');
+            dateConfirmBtn.addEventListener('click', function() {
+                const trendData = generateTrendData();
+                const selectedMetric = document.querySelector('.trend-option.selected').dataset.metric;
+                drawTrendChart(trendData, selectedMetric);
+                updateDonutChart();
+                updateStackedBars(document.querySelector('.dimension-option.selected').dataset.dimension);
+            });
+
+            // 快速选择今天时更新所有图表
+            const quickSelectToday = document.querySelector('.quick-select');
+            quickSelectToday.addEventListener('click', function() {
+                const trendData = generateTrendData();
+                const selectedMetric = document.querySelector('.trend-option.selected').dataset.metric;
+                drawTrendChart(trendData, selectedMetric);
+                updateDonutChart();
+                updateStackedBars(document.querySelector('.dimension-option.selected').dataset.dimension);
+            });
+
             const granularityWrapper = document.querySelector('.granularity-wrapper');
             const selectedGranularity = document.getElementById('selectedGranularity');
             const options = document.querySelectorAll('.granularity-option');
@@ -1957,9 +3198,10 @@
             const cancelBtn = document.querySelector('.btn-cancel');
             const todayBtn = document.querySelector('.quick-select');
 
-            // 当前选中的日期
+            // 当前选中的日期和临时选中的日期
             let currentDate = new Date();
             let selectedDateValue = new Date();
+            let tempSelectedDate = null;
 
             // 格式化日期的函数
             function formatDate(date) {
@@ -2325,11 +3567,38 @@
             });
         });
 
+        // 为快捷操作按钮添加点击事件
+        const quickActionItems = document.querySelectorAll('.quick-action-item');
+        quickActionItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.stopPropagation();
+                messageModal.classList.add('active');
+            });
+        });
+
+        // 为行动建议卡片添加点击事件
+        const suggestionItems = document.querySelectorAll('.suggestion-item');
+        const moreActionBtn = document.querySelector('.action-suggestions .more-actions');
+        
+        suggestionItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.stopPropagation();
+                messageModal.classList.add('active');
+            });
+        });
+        
+        if (moreActionBtn) {
+            moreActionBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                messageModal.classList.add('active');
+            });
+        }
+
         // 环形图相关代码
         document.addEventListener('DOMContentLoaded', function() {
             const svg = document.querySelector('.rating-circle svg');
             const tooltip = document.querySelector('.segment-tooltip');
-
+            
             // 生成随机数据的函数
             function generateRandomData() {
                 const data = [];
@@ -2399,144 +3668,144 @@
                 const radius = 91;
                 const innerRadius = 63;
                 const center = radius;
-                let startAngle = 0;
+            let startAngle = 0;
 
                 // 计算平均分
                 const averageScore = data.reduce((acc, item) => acc + (item.score * item.percentage / 100), 0);
                 document.querySelector('.rating-circle .circle-value .value').textContent = averageScore.toFixed(2);
 
-                // 创建扇区
+            // 创建扇区
                 data.forEach((item) => {
                     const percentage = item.percentage / 100;
-                    const angle = percentage * 360;
-                    const endAngle = startAngle + angle;
-                    
-                    const startRad = (startAngle - 90) * Math.PI / 180;
-                    const endRad = (endAngle - 90) * Math.PI / 180;
-                    
-                    const x1 = center + radius * Math.cos(startRad);
-                    const y1 = center + radius * Math.sin(startRad);
-                    const x2 = center + radius * Math.cos(endRad);
-                    const y2 = center + radius * Math.sin(endRad);
-                    
-                    const xi1 = center + innerRadius * Math.cos(startRad);
-                    const yi1 = center + innerRadius * Math.sin(startRad);
-                    const xi2 = center + innerRadius * Math.cos(endRad);
-                    const yi2 = center + innerRadius * Math.sin(endRad);
+                const angle = percentage * 360;
+                const endAngle = startAngle + angle;
+                
+                const startRad = (startAngle - 90) * Math.PI / 180;
+                const endRad = (endAngle - 90) * Math.PI / 180;
+                
+                const x1 = center + radius * Math.cos(startRad);
+                const y1 = center + radius * Math.sin(startRad);
+                const x2 = center + radius * Math.cos(endRad);
+                const y2 = center + radius * Math.sin(endRad);
+                
+                const xi1 = center + innerRadius * Math.cos(startRad);
+                const yi1 = center + innerRadius * Math.sin(startRad);
+                const xi2 = center + innerRadius * Math.cos(endRad);
+                const yi2 = center + innerRadius * Math.sin(endRad);
 
-                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                    const largeArcFlag = angle > 180 ? 1 : 0;
-                    
-                    const d = [
-                        `M ${xi1} ${yi1}`,
-                        `L ${x1} ${y1}`,
-                        `A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2}`,
-                        `L ${xi2} ${yi2}`,
-                        `A ${innerRadius} ${innerRadius} 0 ${largeArcFlag} 0 ${xi1} ${yi1}`,
-                        'Z'
-                    ].join(' ');
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                const largeArcFlag = angle > 180 ? 1 : 0;
+                
+                const d = [
+                    `M ${xi1} ${yi1}`,
+                    `L ${x1} ${y1}`,
+                    `A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2}`,
+                    `L ${xi2} ${yi2}`,
+                    `A ${innerRadius} ${innerRadius} 0 ${largeArcFlag} 0 ${xi1} ${yi1}`,
+                    'Z'
+                ].join(' ');
 
-                    path.setAttribute('d', d);
-                    path.setAttribute('fill', item.color);
-                    path.setAttribute('class', 'donut-segment');
-                    
-                    // 添加圆角和间隔
-                    path.setAttribute('stroke', '#fff');
-                    path.setAttribute('stroke-width', '2');
-                    path.style.strokeLinejoin = 'round';
-                    path.style.strokeLinecap = 'round';
+                path.setAttribute('d', d);
+                path.setAttribute('fill', item.color);
+                path.setAttribute('class', 'donut-segment');
+                
+                // 添加圆角和间隔
+                path.setAttribute('stroke', '#fff');
+                path.setAttribute('stroke-width', '2');
+                path.style.strokeLinejoin = 'round';
+                path.style.strokeLinecap = 'round';
 
-                    // 添加hover事件
-                    path.addEventListener('mousemove', (e) => {
-                        const rect = svg.getBoundingClientRect();
+                // 添加hover事件
+                path.addEventListener('mousemove', (e) => {
+                    const rect = svg.getBoundingClientRect();
                         tooltip.innerHTML = `${item.score}分: ${item.percentage.toFixed(1)}%`;
-                        tooltip.style.left = (e.clientX - rect.left + 10) + 'px';
-                        tooltip.style.top = (e.clientY - rect.top - 25) + 'px';
-                        tooltip.classList.add('visible');
-                    });
+                    tooltip.style.left = (e.clientX - rect.left + 10) + 'px';
+                    tooltip.style.top = (e.clientY - rect.top - 25) + 'px';
+                    tooltip.classList.add('visible');
+                });
 
-                    path.addEventListener('mouseleave', () => {
-                        tooltip.classList.remove('visible');
-                    });
+                path.addEventListener('mouseleave', () => {
+                    tooltip.classList.remove('visible');
+                });
 
-                    svg.appendChild(path);
+                svg.appendChild(path);
                     startAngle = endAngle + 1;
                 });
             }
 
             // 更新堆叠条形图的函数
-            function updateStackedBars(selectedDimension = 'age') {
-                const dimensionData = {
-                    age: [
-                        { range: '0-18 岁', score: 3.12 },
-                        { range: '18-30 岁', score: 4.31 },
-                        { range: '30-45 岁', score: 3.08 },
-                        { range: '30-45 岁', score: 3.12 },
-                        { range: '45+ 岁', score: 2.88 }
-                    ],
-                    gender: [
-                        { range: '男性', score: 3.85 },
-                        { range: '女性', score: 4.12 }
-                    ],
-                    education: [
-                        { range: '高中及以下', score: 3.45 },
-                        { range: '大专', score: 3.78 },
-                        { range: '本科', score: 4.15 },
-                        { range: '硕士及以上', score: 4.32 }
-                    ]
-                };
+                function updateStackedBars(selectedDimension = 'age') {
+                    const dimensionData = {
+                        age: [
+                            { range: '0-18 岁', score: 3.12 },
+                            { range: '18-30 岁', score: 4.31 },
+                            { range: '30-45 岁', score: 3.08 },
+                            { range: '30-45 岁', score: 3.12 },
+                            { range: '45+ 岁', score: 2.88 }
+                        ],
+                        gender: [
+                            { range: '男性', score: 3.85 },
+                            { range: '女性', score: 4.12 }
+                        ],
+                        education: [
+                            { range: '高中及以下', score: 3.45 },
+                            { range: '大专', score: 3.78 },
+                            { range: '本科', score: 4.15 },
+                            { range: '硕士及以上', score: 4.32 }
+                        ]
+                    };
 
-                const breakdownContainer = document.querySelector('.rating-breakdown');
-                const existingItems = breakdownContainer.querySelectorAll('.breakdown-item');
-                existingItems.forEach(item => item.remove());
+                    const breakdownContainer = document.querySelector('.rating-breakdown');
+                        const existingItems = breakdownContainer.querySelectorAll('.breakdown-item');
+                        existingItems.forEach(item => item.remove());
 
                 dimensionData[selectedDimension].forEach(group => {
-                    const distribution = generateScoreDistribution(group.score);
-                    
-                    const item = document.createElement('div');
-                    item.className = 'breakdown-item';
-                    
-                    const range = document.createElement('span');
-                    range.className = 'age-range';
-                    range.textContent = group.range;
-                    
-                    const barContainer = document.createElement('div');
-                    barContainer.className = 'bar-container';
-                    
-                    // 添加分数段
-                    for (let score = 1; score <= 5; score++) {
-                        if (distribution[score] > 0) {
-                            const segment = document.createElement('div');
+                            const distribution = generateScoreDistribution(group.score);
+                            
+                            const item = document.createElement('div');
+                            item.className = 'breakdown-item';
+                            
+                            const range = document.createElement('span');
+                            range.className = 'age-range';
+                            range.textContent = group.range;
+                            
+                            const barContainer = document.createElement('div');
+                            barContainer.className = 'bar-container';
+                            
+                            // 添加分数段
+                            for (let score = 1; score <= 5; score++) {
+                                if (distribution[score] > 0) {
+                                    const segment = document.createElement('div');
                             segment.className = `bar-segment score-${score}`;
-                            segment.style.width = `${distribution[score]}%`;
-                            
-                            const tooltip = document.createElement('div');
-                            tooltip.className = 'bar-tooltip';
-                            segment.appendChild(tooltip);
-                            
-                            segment.addEventListener('mousemove', (e) => {
-                                tooltip.innerHTML = `${score}分: ${distribution[score].toFixed(1)}%`;
-                                tooltip.classList.add('visible');
-                            });
+                                    segment.style.width = `${distribution[score]}%`;
+                                    
+                                    const tooltip = document.createElement('div');
+                                    tooltip.className = 'bar-tooltip';
+                                    segment.appendChild(tooltip);
+                                    
+                                    segment.addEventListener('mousemove', (e) => {
+                                        tooltip.innerHTML = `${score}分: ${distribution[score].toFixed(1)}%`;
+                                        tooltip.classList.add('visible');
+                                    });
 
-                            segment.addEventListener('mouseleave', () => {
-                                tooltip.classList.remove('visible');
-                            });
+                                    segment.addEventListener('mouseleave', () => {
+                                        tooltip.classList.remove('visible');
+                                    });
+                                    
+                                    barContainer.appendChild(segment);
+                                }
+                            }
                             
-                            barContainer.appendChild(segment);
-                        }
-                    }
-                    
-                    const scoreValue = document.createElement('span');
-                    scoreValue.className = 'score';
+                            const scoreValue = document.createElement('span');
+                            scoreValue.className = 'score';
                     scoreValue.textContent = group.score.toFixed(2);
-                    
-                    item.appendChild(range);
-                    item.appendChild(barContainer);
-                    item.appendChild(scoreValue);
-                    breakdownContainer.appendChild(item);
-                });
-            }
+                            
+                            item.appendChild(range);
+                            item.appendChild(barContainer);
+                            item.appendChild(scoreValue);
+                            breakdownContainer.appendChild(item);
+                        });
+                    }
 
             // 初始化维度选择器
             function initializeDimensionSelector() {
@@ -2601,6 +3870,644 @@
                 updateDonutChart();
                 const selectedDimension = document.querySelector('.dimension-option.selected').dataset.dimension;
                 updateStackedBars(selectedDimension);
+            });
+        });
+
+        // 生成趋势图数据
+        function generateTrendData(days = 30, metric = 'revenue') {
+            const data = [];
+            const today = new Date();
+            
+            // 根据不同指标生成合适范围的随机数据
+            const getRandomValue = (metric) => {
+                let baseValue, minValue, maxValue;
+                switch(metric) {
+                    case 'revenue':
+                        // 总营收范围：300-700万
+                        baseValue = 500 * 10000;
+                        minValue = 300 * 10000;
+                        maxValue = 700 * 10000;
+                        return Math.round(minValue + Math.random() * (maxValue - minValue));
+                    case 'occupancy':
+                        // 入住率范围：60-85%
+                        minValue = 60;
+                        maxValue = 85;
+                        return Number((minValue + Math.random() * (maxValue - minValue)).toFixed(1));
+                    case 'avgPrice':
+                        // 平均房价范围：350-650元
+                        minValue = 350;
+                        maxValue = 650;
+                        return Math.round(minValue + Math.random() * (maxValue - minValue));
+                    default:
+                        return Math.floor(Math.random() * 20000) + 10000;
+                }
+            };
+            
+            for (let i = 0; i < days; i++) {
+                const date = new Date(today);
+                date.setDate(date.getDate() - i);
+                
+                const brandValue = getRandomValue(metric);
+                const industryValue = getRandomValue(metric);
+                
+                data.unshift({
+                    date: date,
+                    brand: brandValue,
+                    industry: industryValue
+                });
+            }
+            
+            return data;
+        }
+
+        // 绘制趋势图
+        function drawTrendChart(data, metric = 'revenue') {
+            const chart = document.getElementById('trendChart');
+            const width = chart.clientWidth;
+            const height = chart.clientHeight;
+            const padding = { top: 20, right: 20, bottom: 30, left: 60 };
+            
+            // 清空现有内容
+            chart.innerHTML = '';
+            
+            // 创建SVG
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('width', width);
+            svg.setAttribute('height', height);
+            chart.appendChild(svg);
+
+            // 判断是否显示节假日
+            const showHolidays = !document.querySelector('.trend-toggle-switch').classList.contains('off');
+            
+            // 节假日数据（示例）
+            const holidays = [
+                { date: '2023-10-01', name: '国庆节' },
+                { date: '2023-10-02', name: '国庆节' },
+                { date: '2023-10-03', name: '国庆节' },
+                { date: '2023-10-04', name: '国庆节' },
+                { date: '2023-10-05', name: '国庆节' },
+                { date: '2023-10-06', name: '国庆节' },
+                { date: '2023-10-07', name: '国庆节' },
+                { date: '2023-09-29', name: '中秋节' },
+                { date: '2023-09-30', name: '中秋节' }
+            ];
+            
+            // 添加tooltip容器
+            const tooltip = document.createElement('div');
+            tooltip.className = 'chart-tooltip';
+            tooltip.style.cssText = `
+                position: absolute;
+                display: none;
+                background: rgba(0, 0, 0, 0.65);
+                color: white;
+                padding: 8px 12px;
+                border-radius: 4px;
+                font-size: 12px;
+                pointer-events: none;
+                z-index: 10;
+                white-space: nowrap;
+                transition: all 0.2s ease-out;
+                opacity: 0;
+                transform: translateY(5px);
+            `;
+            chart.appendChild(tooltip);
+            
+            // 添加垂直参考线
+            const verticalLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            verticalLine.setAttribute('stroke', '#86909C');
+            verticalLine.setAttribute('stroke-width', '1');
+            verticalLine.setAttribute('stroke-dasharray', '4,4');
+            verticalLine.style.cssText = 'display: none; transition: transform 0.1s ease-out;';
+            svg.appendChild(verticalLine);
+            
+            // 添加hover点
+            const hoverDotBrand = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            const hoverDotIndustry = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            const hoverDotStyle = `
+                display: none;
+                transition: all 0.15s ease-out;
+                transform-origin: center center;
+            `;
+            hoverDotBrand.setAttribute('r', '4');
+            hoverDotBrand.setAttribute('fill', '#FFD100');
+            hoverDotBrand.style.cssText = hoverDotStyle;
+            hoverDotIndustry.setAttribute('r', '4');
+            hoverDotIndustry.setAttribute('fill', '#86909C');
+            hoverDotIndustry.style.cssText = hoverDotStyle;
+            svg.appendChild(hoverDotBrand);
+            svg.appendChild(hoverDotIndustry);
+            
+            // 计算比例尺
+            const xScale = width - padding.left - padding.right;
+            const yScale = height - padding.top - padding.bottom;
+            
+            // 根据不同指标设置合适的Y轴最大值和数据处理方式
+            let yMax, yMin = 0;
+            const maxValue = Math.max(...data.map(d => Math.max(d.brand, d.industry)));
+            
+            switch(metric) {
+                case 'revenue':
+                    yMax = Math.ceil(maxValue / 10000) * 10000;
+                    break;
+                case 'occupancy':
+                    yMin = 50; // 设置最小值为50%
+                    yMax = 100;
+                    break;
+                case 'avgPrice':
+                    yMin = 300; // 设置最小值为300元
+                    yMax = 700; // 设置最大值为700元
+                    break;
+                default:
+                    yMax = Math.ceil(maxValue / 10) * 10;
+            }
+            
+            // 格式化Y轴数值
+            const formatValue = (value) => {
+                switch(metric) {
+                    case 'revenue':
+                        return Math.floor(value / 10000) + '万';
+                    case 'occupancy':
+                        return Math.floor(value) + '%';
+                    case 'avgPrice':
+                        return Math.floor(value) + '元';
+                    default:
+                        return value;
+                }
+            };
+            
+            // Y轴
+            const yTicks = 5;
+            for (let i = 0; i <= yTicks; i++) {
+                const value = yMin + ((yMax - yMin) / yTicks) * i;
+                const y = height - padding.bottom - ((value - yMin) / (yMax - yMin) * yScale);
+                
+                // 绘制横向网格线
+                const gridLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                gridLine.setAttribute('x1', padding.left);
+                gridLine.setAttribute('x2', width - padding.right);
+                gridLine.setAttribute('y1', y);
+                gridLine.setAttribute('y2', y);
+                gridLine.setAttribute('stroke', '#E5E6EB');
+                gridLine.setAttribute('stroke-width', '1');
+                svg.appendChild(gridLine);
+                
+                // 添加Y轴刻度值
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', padding.left - 8);
+                text.setAttribute('y', y);
+                text.setAttribute('text-anchor', 'end');
+                text.setAttribute('dominant-baseline', 'middle');
+                text.setAttribute('fill', '#86909C');
+                text.setAttribute('font-size', '12');
+                text.textContent = formatValue(value);
+                svg.appendChild(text);
+            }
+            
+            // 准备数据点
+            const brandPoints = data.map((d, i) => ({
+                x: padding.left + (i * xScale / (data.length - 1)),
+                y: height - padding.bottom - ((d.brand - yMin) / (yMax - yMin) * yScale)
+            }));
+            
+            const industryPoints = data.map((d, i) => ({
+                x: padding.left + (i * xScale / (data.length - 1)),
+                y: height - padding.bottom - ((d.industry - yMin) / (yMax - yMin) * yScale)
+            }));
+            
+            // 生成平滑路径
+            const brandD = getCurvePoints(brandPoints);
+            const industryD = getCurvePoints(industryPoints);
+            
+            // 创建路径
+            const brandPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            const industryPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            
+            // 设置路径样式
+            brandPath.setAttribute('d', brandD);
+            brandPath.setAttribute('stroke', '#FFD100');
+            brandPath.setAttribute('stroke-width', '2.5');
+            brandPath.setAttribute('fill', 'none');
+            
+            industryPath.setAttribute('d', industryD);
+            industryPath.setAttribute('stroke', '#86909C');
+            industryPath.setAttribute('stroke-width', '2.5');
+            industryPath.setAttribute('stroke-dasharray', '4,4');
+            industryPath.setAttribute('fill', 'none');
+            
+            // 添加渐变填充
+            const gradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+            gradient.setAttribute('id', 'areaGradient');
+            gradient.setAttribute('x1', '0');
+            gradient.setAttribute('y1', '0');
+            gradient.setAttribute('x2', '0');
+            gradient.setAttribute('y2', '1');
+            
+            const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+            stop1.setAttribute('offset', '0%');
+            stop1.setAttribute('stop-color', '#FFD100');
+            stop1.setAttribute('stop-opacity', '0.2');
+            
+            const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+            stop2.setAttribute('offset', '100%');
+            stop2.setAttribute('stop-color', '#FFD100');
+            stop2.setAttribute('stop-opacity', '0');
+            
+            gradient.appendChild(stop1);
+            gradient.appendChild(stop2);
+            svg.appendChild(gradient);
+            
+            // 添加面积
+            const areaPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            let areaD = brandD + `L ${padding.left + xScale},${height - padding.bottom} L ${padding.left},${height - padding.bottom} Z`;
+            areaPath.setAttribute('d', areaD);
+            areaPath.setAttribute('fill', 'url(#areaGradient)');
+            
+            // 按正确的顺序添加元素
+            svg.appendChild(areaPath);
+            svg.appendChild(industryPath);
+            svg.appendChild(brandPath);
+
+            // 在SVG上添加透明的交互层
+            const overlay = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            overlay.setAttribute('x', padding.left);
+            overlay.setAttribute('y', padding.top);
+            overlay.setAttribute('width', xScale);
+            overlay.setAttribute('height', yScale);
+            overlay.setAttribute('fill', 'transparent');
+            svg.appendChild(overlay);
+
+            // 添加鼠标交互
+            let currentIndex = -1;
+            overlay.addEventListener('mousemove', (e) => {
+                const chartRect = chart.getBoundingClientRect();
+                const mouseX = e.clientX - chartRect.left - padding.left;
+                
+                // 计算最近的数据点索引
+                const index = Math.round((mouseX / xScale) * (data.length - 1));
+                
+                if (index >= 0 && index < data.length) {
+                    const point = data[index];
+                    const x = padding.left + (index * xScale / (data.length - 1));
+                    const brandY = height - padding.bottom - ((point.brand - yMin) / (yMax - yMin) * yScale);
+                    const industryY = height - padding.bottom - ((point.industry - yMin) / (yMax - yMin) * yScale);
+                    
+                    // 更新垂直线位置
+                    verticalLine.style.display = 'block';
+                    verticalLine.setAttribute('x1', x);
+                    verticalLine.setAttribute('y1', padding.top);
+                    verticalLine.setAttribute('x2', x);
+                    verticalLine.setAttribute('y2', height - padding.bottom);
+                    
+                    // 更新hover点位置
+                    const updateHoverDot = (dot, cy) => {
+                        dot.style.display = 'block';
+                        dot.setAttribute('cx', x);
+                        dot.setAttribute('cy', cy);
+                        // 添加缩放动画
+                        dot.style.transform = 'scale(1)';
+                    };
+                    
+                    updateHoverDot(hoverDotBrand, brandY);
+                    updateHoverDot(hoverDotIndustry, industryY);
+                    
+                    // 更新tooltip内容和位置
+                    const date = point.date;
+                    const dateStr = `${date.getMonth() + 1}月${date.getDate()}日`;
+                    let tooltipContent = `
+                        <div style="margin-bottom: 4px;">${dateStr}</div>
+                        <div style="display: flex; align-items: center; margin-bottom: 4px;">
+                            <span style="display: inline-block; width: 8px; height: 8px; background: #FFD100; border-radius: 50%; margin-right: 6px;"></span>
+                            <span>本品牌：${formatValue(point.brand)}</span>
+                        </div>
+                        <div style="display: flex; align-items: center;">
+                            <span style="display: inline-block; width: 8px; height: 8px; background: #86909C; border-radius: 50%; margin-right: 6px;"></span>
+                            <span>行业均值：${formatValue(point.industry)}</span>
+                        </div>
+                    `;
+                    
+                    tooltip.innerHTML = tooltipContent;
+                    tooltip.style.display = 'block';
+                    tooltip.style.opacity = '1';
+                    tooltip.style.transform = 'translateY(0)';
+                    
+                    // 计算tooltip位置，避免超出边界
+                    const tooltipX = e.clientX - chartRect.left + 10;
+                    const tooltipY = e.clientY - chartRect.top - tooltip.offsetHeight - 10;
+                    
+                    // 确保tooltip不会超出图表边界
+                    if (tooltipX + tooltip.offsetWidth > width) {
+                        tooltip.style.left = (tooltipX - tooltip.offsetWidth - 20) + 'px';
+                    } else {
+                        tooltip.style.left = tooltipX + 'px';
+                    }
+                    
+                    if (tooltipY < 0) {
+                        tooltip.style.top = (e.clientY - chartRect.top + 10) + 'px';
+                    } else {
+                        tooltip.style.top = tooltipY + 'px';
+                    }
+                }
+            });
+
+            // 修改mouseleave事件处理
+            overlay.addEventListener('mouseleave', () => {
+                verticalLine.style.display = 'none';
+                
+                // 添加hover点的缩放退出动画
+                hoverDotBrand.style.transform = 'scale(0)';
+                hoverDotIndustry.style.transform = 'scale(0)';
+                setTimeout(() => {
+                    hoverDotBrand.style.display = 'none';
+                    hoverDotIndustry.style.display = 'none';
+                }, 150);
+                
+                // 添加tooltip的淡出动画
+                tooltip.style.opacity = '0';
+                tooltip.style.transform = 'translateY(5px)';
+                setTimeout(() => {
+                    tooltip.style.display = 'none';
+                }, 200);
+            });
+
+            // 在绘制完图表主体后，添加节假日标签
+            if (showHolidays) {
+                holidays.forEach(holiday => {
+                    const holidayDate = new Date(holiday.date);
+                    const matchingDataPoint = data.find(d => 
+                        d.date.getFullYear() === holidayDate.getFullYear() &&
+                        d.date.getMonth() === holidayDate.getMonth() &&
+                        d.date.getDate() === holidayDate.getDate()
+                    );
+
+                    if (matchingDataPoint) {
+                        const index = data.indexOf(matchingDataPoint);
+                        const x = padding.left + (index / (data.length - 1)) * xScale;
+                        
+                        // 创建节假日标签
+                        const label = document.createElement('div');
+                        label.className = 'holiday-label';
+                        label.textContent = holiday.name;
+                        label.style.left = x + 'px';
+                        chart.appendChild(label);
+                    }
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化趋势图
+            const trendData = generateTrendData();
+            drawTrendChart(trendData);
+
+            // 初始化环形图
+            updateDonutChart();
+            
+            // 初始化堆叠条形图
+            updateStackedBars('age');
+
+            // 初始化维度选择器
+            initializeDimensionSelector();
+
+            // 为趋势图指标切换添加事件监听
+            const trendOptions = document.querySelectorAll('.trend-option');
+            const trendSelector = document.querySelector('.trend-selector');
+            const trendSelected = document.querySelector('.trend-selected');
+
+            trendSelected.addEventListener('click', function(e) {
+                e.stopPropagation();
+                trendSelector.classList.toggle('active');
+            });
+
+            trendOptions.forEach(option => {
+                option.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    trendOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    
+                    // 更新趋势图
+                    const metric = this.dataset.metric;
+                    const trendData = generateTrendData(30, metric);
+                    drawTrendChart(trendData, metric);
+                });
+            });
+
+            // 为节假日开关添加事件监听
+            const holidayToggle = document.querySelector('.trend-toggle-switch');
+            holidayToggle.addEventListener('click', function() {
+                this.classList.toggle('off');
+                const trendData = generateTrendData();
+                const selectedMetric = document.querySelector('.trend-option.selected').dataset.metric;
+                drawTrendChart(trendData, selectedMetric);
+            });
+
+            // 监听窗口大小变化，重新绘制图表
+            window.addEventListener('resize', function() {
+                const selectedMetric = document.querySelector('.trend-option.selected').dataset.metric;
+                drawTrendChart(trendData, selectedMetric);
+                updateDonutChart();
+            });
+
+            // 日期选择器确认按钮点击时更新所有图表
+            const dateConfirmBtn = document.querySelector('.btn-confirm');
+            dateConfirmBtn.addEventListener('click', function() {
+                const trendData = generateTrendData();
+                const selectedMetric = document.querySelector('.trend-option.selected').dataset.metric;
+                drawTrendChart(trendData, selectedMetric);
+                updateDonutChart();
+                updateStackedBars(document.querySelector('.dimension-option.selected').dataset.dimension);
+            });
+
+            // 快速选择今天时更新所有图表
+            const quickSelectToday = document.querySelector('.quick-select');
+            quickSelectToday.addEventListener('click', function() {
+                const trendData = generateTrendData();
+                const selectedMetric = document.querySelector('.trend-option.selected').dataset.metric;
+                drawTrendChart(trendData, selectedMetric);
+                updateDonutChart();
+                updateStackedBars(document.querySelector('.dimension-option.selected').dataset.dimension);
+            });
+
+            const granularityWrapper = document.querySelector('.granularity-wrapper');
+            const selectedGranularity = document.getElementById('selectedGranularity');
+            const options = document.querySelectorAll('.granularity-option');
+
+            // 点击选择器时显示/隐藏选项
+            granularityWrapper.addEventListener('click', function(e) {
+                granularityWrapper.classList.toggle('active');
+                e.stopPropagation();
+            });
+
+            // 点击选项时更新选中值
+            options.forEach(option => {
+                option.addEventListener('click', function(e) {
+                    const value = this.dataset.value;
+                    selectedGranularity.textContent = this.textContent;
+                    
+                    // 更新选中状态
+                    options.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    
+                    granularityWrapper.classList.remove('active');
+                    e.stopPropagation();
+                });
+            });
+
+            // 点击页面其他地方时关闭下拉面板
+            document.addEventListener('click', function() {
+                granularityWrapper.classList.remove('active');
+            });
+
+            // 日期选择器相关
+            const dateSelector = document.querySelector('.date-selector');
+            const datePanel = document.querySelector('.date-panel');
+            const selectedDate = document.querySelector('.selected-date');
+            const prevMonthBtn = document.querySelector('.prev-month');
+            const nextMonthBtn = document.querySelector('.next-month');
+            const currentMonthElement = document.querySelector('.current-month');
+            const daysContainer = document.querySelector('.days');
+            const confirmBtn = document.querySelector('.btn-confirm');
+            const cancelBtn = document.querySelector('.btn-cancel');
+            const todayBtn = document.querySelector('.quick-select');
+
+            // 当前选中的日期和临时选中的日期
+            let currentDate = new Date();
+            let selectedDateValue = new Date();
+            let tempSelectedDate = null;
+
+            // 格式化日期的函数
+            function formatDate(date) {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
+
+            // 更新月份显示
+            function updateMonthDisplay() {
+                currentMonthElement.textContent = `${currentDate.getFullYear()}年${currentDate.getMonth() + 1}月`;
+            }
+
+            // 生成日历数据
+            function generateCalendar() {
+                // 清空现有日历
+                daysContainer.innerHTML = '';
+                
+                // 获取当月第一天
+                const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+                // 获取当月最后一天
+                const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+                
+                // 获取上个月的最后几天
+                const prevMonthLastDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+                let firstDayWeek = firstDay.getDay() || 7; // 转换周日从0到7
+                
+                // 添加上个月的日期
+                for (let i = firstDayWeek - 1; i > 0; i--) {
+                    const day = document.createElement('div');
+                    day.className = 'day other-month';
+                    day.textContent = prevMonthLastDay.getDate() - i + 1;
+                    daysContainer.appendChild(day);
+                }
+                
+                // 添加当月的日期
+                const today = new Date();
+                for (let i = 1; i <= lastDay.getDate(); i++) {
+                    const day = document.createElement('div');
+                    day.className = 'day';
+                    day.textContent = i;
+                    
+                    // 判断是否是今天
+                    if (currentDate.getFullYear() === today.getFullYear() &&
+                        currentDate.getMonth() === today.getMonth() &&
+                        i === today.getDate()) {
+                        day.classList.add('today');
+                    }
+                    
+                    // 判断是否是选中日期
+                    if (currentDate.getFullYear() === selectedDateValue.getFullYear() &&
+                        currentDate.getMonth() === selectedDateValue.getMonth() &&
+                        i === selectedDateValue.getDate()) {
+                        day.classList.add('selected');
+                    }
+                    
+                    // 添加点击事件
+                    day.addEventListener('click', function() {
+                        document.querySelectorAll('.day').forEach(d => d.classList.remove('selected'));
+                        this.classList.add('selected');
+                        selectedDateValue = new Date(currentDate.getFullYear(), currentDate.getMonth(), i);
+                    });
+                    
+                    daysContainer.appendChild(day);
+                }
+                
+                // 添加下个月的日期
+                let remainingDays = 42 - (firstDayWeek - 1) - lastDay.getDate(); // 42是6行7列
+                for (let i = 1; i <= remainingDays; i++) {
+                    const day = document.createElement('div');
+                    day.className = 'day other-month';
+                    day.textContent = i;
+                    daysContainer.appendChild(day);
+                }
+            }
+
+            // 初始化日历
+            updateMonthDisplay();
+            generateCalendar();
+            selectedDate.textContent = formatDate(currentDate);
+
+            // 上个月按钮点击事件
+            prevMonthBtn.addEventListener('click', function() {
+                currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+                updateMonthDisplay();
+                generateCalendar();
+            });
+
+            // 下个月按钮点击事件
+            nextMonthBtn.addEventListener('click', function() {
+                currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
+                updateMonthDisplay();
+                generateCalendar();
+            });
+
+            // 点击日期选择器显示/隐藏面板
+            dateSelector.addEventListener('click', function(e) {
+                datePanel.classList.toggle('active');
+                this.classList.toggle('active');
+                e.stopPropagation();
+            });
+
+            // 确定按钮
+            confirmBtn.addEventListener('click', function() {
+                selectedDate.textContent = formatDate(selectedDateValue);
+                datePanel.classList.remove('active');
+            });
+
+            // 取消按钮
+            cancelBtn.addEventListener('click', function() {
+                // 重置选中状态
+                selectedDateValue = new Date(currentDate);
+                generateCalendar();
+                datePanel.classList.remove('active');
+            });
+
+            // 今天按钮
+            todayBtn.addEventListener('click', function() {
+                currentDate = new Date();
+                selectedDateValue = new Date();
+                updateMonthDisplay();
+                generateCalendar();
+            });
+
+            // 点击页面其他地方关闭面板
+            document.addEventListener('click', function() {
+                datePanel.classList.remove('active');
+                dateSelector.classList.remove('active');
+                granularityWrapper.classList.remove('active');
+            });
+
+            // 阻止面板内部点击事件冒泡
+            datePanel.addEventListener('click', function(e) {
+                e.stopPropagation();
             });
         });
 
@@ -2770,6 +4677,386 @@
             console.log('选中维度元素:', selectedDimension);
             console.log('选项容器:', dimensionOptions);
         });
+
+        // 趋势指标选择器功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const trendSelector = document.querySelector('.trend-selector');
+            const trendSelected = document.querySelector('.trend-selected');
+            const trendOptions = document.querySelector('.trend-options');
+            
+            if (!trendSelector || !trendSelected || !trendOptions) {
+                console.error('趋势选择器元素未找到');
+                return;
+            }
+
+            // 为选择器添加点击事件
+            trendSelected.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                trendSelector.classList.toggle('active');
+            });
+            
+            // 为选项添加点击事件
+            trendOptions.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const option = e.target.closest('.trend-option');
+                if (!option) return;
+                
+                // 更新选中状态
+                const options = trendOptions.querySelectorAll('.trend-option');
+                options.forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
+                
+                // 更新显示的文本
+                trendSelected.innerHTML = `
+                    ${option.textContent}
+                    <svg class="trend-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M2.5 4.5L6 8L9.5 4.5" stroke="#4E5969" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                `;
+                
+                // 关闭下拉面板
+                trendSelector.classList.remove('active');
+                
+                // 更新趋势图
+                const metric = option.dataset.metric;
+                const trendData = generateTrendData();
+                drawTrendChart(trendData, metric);
+            });
+            
+            // 点击页面其他地方关闭下拉面板
+            document.addEventListener('click', function() {
+                trendSelector.classList.remove('active');
+            });
+
+            // 阻止下拉面板的点击事件冒泡
+            trendOptions.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        });
+
+        // 指标卡点击联动功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const metricCards = document.querySelectorAll('.metric-card');
+            const trendSelector = document.querySelector('.trend-selector');
+            const trendSelected = document.querySelector('.trend-selected');
+            const trendOptions = document.querySelector('.trend-options');
+
+            // 为每个指标卡添加点击事件
+            metricCards.forEach((card, index) => {
+                card.addEventListener('click', function() {
+                    // 获取对应的指标选项
+                    const metrics = ['revenue', 'occupancy', 'avgPrice'];
+                    const metric = metrics[index];
+                    const option = trendOptions.querySelector(`[data-metric="${metric}"]`);
+                    
+                    if (option) {
+                        // 更新选中状态
+                        trendOptions.querySelectorAll('.trend-option').forEach(opt => opt.classList.remove('selected'));
+                        option.classList.add('selected');
+                        
+                        // 更新显示的文本
+                        trendSelected.innerHTML = `
+                            ${option.textContent}
+                            <svg class="trend-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M2.5 4.5L6 8L9.5 4.5" stroke="#4E5969" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        `;
+                        
+                        // 更新趋势图
+                        const trendData = generateTrendData();
+                        drawTrendChart(trendData, metric);
+                        
+                        // 滚动到趋势图位置
+                        const trendCard = document.querySelector('.trend-card');
+                        if (trendCard) {
+                            trendCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }
+                });
+            });
+        });
+
+        // 时间选择器相关代码
+        document.addEventListener('DOMContentLoaded', function() {
+            // 时间粒度选择器
+            const granularityWrapper = document.querySelector('.granularity-wrapper');
+            const selectedGranularity = document.getElementById('selectedGranularity');
+            const granularityOptions = document.querySelectorAll('.granularity-option:not(.disabled)');
+
+            // 日期选择器
+            const dateSelector = document.querySelector('.date-selector');
+            const datePanel = document.querySelector('.date-panel');
+            const selectedDate = document.querySelector('.selected-date');
+            const prevMonthBtn = document.querySelector('.prev-month');
+            const nextMonthBtn = document.querySelector('.next-month');
+            const currentMonthElement = document.querySelector('.current-month');
+            const daysContainer = document.querySelector('.days');
+            const confirmBtn = document.querySelector('.btn-confirm');
+            const cancelBtn = document.querySelector('.btn-cancel');
+            const todayBtn = document.querySelector('.quick-select');
+
+            let currentDate = new Date();
+            let selectedDateValue = new Date();
+            let tempSelectedDate = null;
+
+            // 格式化日期函数
+            function formatDate(date) {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
+
+            // 更新月份显示
+            function updateMonthDisplay() {
+                currentMonthElement.textContent = `${currentDate.getFullYear()}年${currentDate.getMonth() + 1}月`;
+            }
+
+            // 生成日历
+            function generateCalendar() {
+                daysContainer.innerHTML = '';
+                
+                const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+                const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+                const prevMonthLastDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+                let firstDayWeek = firstDay.getDay() || 7;
+
+                // 上月日期
+                for (let i = firstDayWeek - 1; i > 0; i--) {
+                    const day = document.createElement('div');
+                    day.className = 'day other-month';
+                    day.textContent = prevMonthLastDay.getDate() - i + 1;
+                    daysContainer.appendChild(day);
+                }
+
+                // 当月日期
+                const today = new Date();
+                for (let i = 1; i <= lastDay.getDate(); i++) {
+                    const day = document.createElement('div');
+                    day.className = 'day';
+                    day.textContent = i;
+
+                    // 今天
+                    if (currentDate.getFullYear() === today.getFullYear() &&
+                        currentDate.getMonth() === today.getMonth() &&
+                        i === today.getDate()) {
+                        day.classList.add('today');
+                    }
+
+                    // 选中日期
+                    if (selectedDateValue &&
+                        currentDate.getFullYear() === selectedDateValue.getFullYear() &&
+                        currentDate.getMonth() === selectedDateValue.getMonth() &&
+                        i === selectedDateValue.getDate()) {
+                        day.classList.add('selected');
+                    }
+
+                    day.addEventListener('click', function() {
+                        daysContainer.querySelectorAll('.day').forEach(d => d.classList.remove('selected'));
+                        this.classList.add('selected');
+                        tempSelectedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), i);
+                    });
+
+                    daysContainer.appendChild(day);
+                }
+
+                // 下月日期
+                const remainingDays = 42 - (firstDayWeek - 1) - lastDay.getDate();
+                for (let i = 1; i <= remainingDays; i++) {
+                    const day = document.createElement('div');
+                    day.className = 'day other-month';
+                    day.textContent = i;
+                    daysContainer.appendChild(day);
+                }
+            }
+
+            // 初始化日历
+            updateMonthDisplay();
+            generateCalendar();
+            selectedDate.textContent = formatDate(currentDate);
+
+            // 时间粒度选择器事件
+            granularityWrapper.addEventListener('click', function(e) {
+                e.stopPropagation();
+                this.classList.toggle('active');
+            });
+
+            granularityOptions.forEach(option => {
+                option.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    granularityOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedGranularity.textContent = this.textContent;
+                    granularityWrapper.classList.remove('active');
+                });
+            });
+
+            // 日期选择器事件
+            dateSelector.addEventListener('click', function(e) {
+                e.stopPropagation();
+                datePanel.classList.toggle('active');
+                this.classList.toggle('active');
+            });
+
+            prevMonthBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                currentDate.setMonth(currentDate.getMonth() - 1);
+                updateMonthDisplay();
+                generateCalendar();
+            });
+
+            nextMonthBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                updateMonthDisplay();
+                generateCalendar();
+            });
+
+            confirmBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (tempSelectedDate) {
+                    selectedDateValue = tempSelectedDate;
+                    selectedDate.textContent = formatDate(selectedDateValue);
+                }
+                datePanel.classList.remove('active');
+                dateSelector.classList.remove('active');
+            });
+
+            cancelBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                tempSelectedDate = null;
+                generateCalendar();
+                datePanel.classList.remove('active');
+                dateSelector.classList.remove('active');
+            });
+
+            todayBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                currentDate = new Date();
+                tempSelectedDate = new Date();
+                updateMonthDisplay();
+                generateCalendar();
+            });
+
+            // 点击外部关闭面板
+            document.addEventListener('click', function() {
+                datePanel.classList.remove('active');
+                dateSelector.classList.remove('active');
+                granularityWrapper.classList.remove('active');
+            });
+
+            // 阻止面板内部点击事件冒泡
+            datePanel.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        });
+
+        function updateSuggestionEllipsis() {
+            var items = document.querySelectorAll('.suggestion-item');
+            items.forEach(function(item) {
+                var content = item.querySelector('.content');
+                if (!content) return;
+                // 判断是否省略
+                if (content.scrollWidth > content.offsetWidth) {
+                    item.setAttribute('data-ellipsis', 'true');
+                } else {
+                    item.removeAttribute('data-ellipsis');
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateSuggestionEllipsis();
+            window.addEventListener('resize', updateSuggestionEllipsis);
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // ... existing code ...
+            // 为"添加计划"按钮添加弹窗事件
+            var promotionAddBtn = document.querySelector('.promotion-add-btn');
+            var messageModal = document.getElementById('messageModal');
+            if (promotionAddBtn && messageModal) {
+                promotionAddBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    messageModal.classList.add('active');
+                });
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var promotionMenus = document.querySelectorAll('.promotion-item-menu');
+            var messageModal = document.getElementById('messageModal');
+            promotionMenus.forEach(function(menu) {
+                menu.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    if (messageModal) {
+                        messageModal.classList.add('active');
+                    }
+                });
+            });
+        });
+
+        // 推广计划数据刷新逻辑
+        function updatePromotionPlans() {
+            var plans = document.querySelectorAll('.promotion-item');
+            var totalBudget = 0;
+            plans.forEach(function(plan) {
+                var budget = Math.floor(Math.random() * 900000) + 100000;
+                var used = Math.floor(Math.random() * (budget + 1));
+                totalBudget += budget;
+                var usedEl = plan.querySelector('.promotion-item-used');
+                var budgetEl = plan.querySelector('.promotion-item-budget');
+                if (usedEl) usedEl.textContent = '已用￥' + used.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                if (budgetEl) budgetEl.textContent = '预算￥' + budget.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                var progressBar = plan.querySelector('.promotion-progress-bar .progress');
+                var percent = used / budget * 100;
+                if (progressBar) progressBar.style.width = percent.toFixed(1) + '%';
+                // 确保每个 promotion-item 都有 badge
+                var titleRow = plan.querySelector('.promotion-item-title-row');
+                var badge = plan.querySelector('.promotion-item-badge');
+                if (!badge && titleRow) {
+                    badge = document.createElement('span');
+                    badge.className = 'promotion-item-badge';
+                    // 插入到菜单按钮前
+                    var menu = titleRow.querySelector('.promotion-item-menu');
+                    if (menu) {
+                        titleRow.insertBefore(badge, menu);
+                    } else {
+                        titleRow.appendChild(badge);
+                    }
+                }
+                if (badge) {
+                    if (percent > 70) {
+                        badge.innerHTML = '<img src="images/即将完成.svg" alt="即将完成" style="width:48px;height:18px;vertical-align:middle;background:none;">';
+                        badge.style.background = 'none';
+                        badge.style.color = '';
+                    } else {
+                        badge.innerHTML = '';
+                        badge.style.background = 'none';
+                        badge.style.color = '';
+                    }
+                }
+            });
+            var totalEl = document.querySelector('.promotion-total-value');
+            if (totalEl) totalEl.textContent = '￥' + totalBudget.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // 日期选择器确认按钮
+            var dateConfirmBtn = document.querySelector('.btn-confirm');
+            if (dateConfirmBtn) {
+                dateConfirmBtn.addEventListener('click', updatePromotionPlans);
+            }
+            // 快速选择今天
+            var quickSelectToday = document.querySelector('.quick-select');
+            if (quickSelectToday) {
+                quickSelectToday.addEventListener('click', updatePromotionPlans);
+            }
+            // 初始化一次
+            updatePromotionPlans();
+        });
+        // ... existing code ...
     </script>
 </body>
 </html> 
